@@ -10,7 +10,7 @@
 DOTFILES=$HOME/.dotfiles
 EMACSD=$HOME/.emacs.d
 FZF=$HOME/.fzf
-TMUX=$HOME/.tmux
+TMUX=$HOME/.tmux.conf
 BASH=$HOME/.bashrc
 PROFILE=$HOME/.profile
 ALIASES=$HOME/.bash_aliases
@@ -139,7 +139,6 @@ clean_dotfiles()
 	   .bash_profile
 	   .bash_login
 	   .bash_aliases
-	   .gitconfig
 	   .tmux.conf"
 
     for c in ${confs}; do
@@ -171,6 +170,8 @@ promote_yn()
 # Create default configurations directories
 printf "%s ➜  Creating default configurations folders...%s" "${BLUE}" "${NORMAL}"
 mkdir -p "$HOME"/.config >/dev/null 2>&1
+mkdir -p "$HOME"/.config/bash >/dev/null 2>&1
+mkdir -p "$HOME"/.config/less >/dev/null 2>&1
 mkdir -p "$HOME"/.cache >/dev/null 2>&1
 printf "%sCREATED%s\n" "${GREEN}" "${NORMAL}"
 
@@ -205,7 +206,7 @@ chmod +x "$DOTFILES"/install.sh
 # Link dotfiles from repo directory to the home
 ln -sf "$DOTFILES"/bashrc "$BASH"
 ln -sf "$DOTFILES"/profile "$PROFILE"
-ln -sf "$DOTFILES"/bash_aliases "$PROFILE"
+ln -sf "$DOTFILES"/bash_aliases "$ALIASES"
 ln -sf "$DOTFILES"/tmux.conf "$TMUX"
 printf "%sINSTALLED%s\n" "${GREEN}" "${NORMAL}"
 
