@@ -232,6 +232,24 @@ printf "%s ➜  Retrieving MYmacs configuration...%s" "${BLUE}" "${NORMAL}"
 sync_repo noMYfault/MYmacs "$EMACSD"
 printf "%sRETRIEVED%s\n" "${GREEN}" "${NORMAL}"
 
+# Tmux
+command -v tmux >/dev/null 2>&1 || 
+{
+        printf "%s ➜  Installing tmux...%s" "${BLUE}" "${NORMAL}"
+        
+        if is_mac; then
+                sync_brew_package tmux
+        elif is_linux; then
+                if is_arch; then
+                        sync_arch_package tmux
+                elif is_debian; then
+                        sync_apt_package tmux
+                fi
+        fi
+        
+        printf "%sINSTALLED%s\n" "${GREEN}" "${NORMAL}"
+}
+
 
 # Ripgrep
 command -v rg >/dev/null 2>&1 || 
