@@ -211,6 +211,7 @@ ln -sf "$DOTFILES"/bashrc "$BASH"
 ln -sf "$DOTFILES"/profile "$PROFILE"
 ln -sf "$DOTFILES"/bash_aliases "$ALIASES"
 ln -sf "$DOTFILES"/tmux.conf "$TMUX"
+ln -sf "$DOTFILES"/git-completion.bash "$HOME/.config/bash/completions/"
 printf "%sINSTALLED%s\n" "${GREEN}" "${NORMAL}"
 
 # Install bash completion user local
