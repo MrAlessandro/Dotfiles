@@ -113,10 +113,14 @@ if ! shopt -oq posix; then
   if [ -f $HOME/.config/bash/completions/bash-completion/bash-completion ]; then
     . $HOME/.config/bash/completions/bash-completion/bash-completion
   fi
+
+  if [ -f $HOME/.config/bash/completions/git-completion.bash ]; then
+    . $HOME/.config/bash/completions/git-completion.bash
+  fi
 fi
 
 # Execute tmux at shell start up
-if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+if command -v tmux &> /dev/null && [ -z "$TMUX" ] && ! ps -p $PPID | grep -q JetBrains; then
     tmux attach -t $USER || tmux new -s $USER
 fi
 
@@ -125,4 +129,6 @@ function close_tmux
 {
     tmux kill-server > /dev/null 2>&1
 }
+
+
 trap close_tmux EXIT
