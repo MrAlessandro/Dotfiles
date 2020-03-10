@@ -171,6 +171,7 @@ promote_yn()
 printf "%s ➜  Creating default configurations folders...%s" "${BLUE}" "${NORMAL}"
 mkdir -p "$HOME"/.config >/dev/null 2>&1
 mkdir -p "$HOME"/.config/bash >/dev/null 2>&1
+mkdir -p "$HOME"/.config/bash/completions >/dev/null 2>&1
 mkdir -p "$HOME"/.config/less >/dev/null 2>&1
 mkdir -p "$HOME"/.config/tmux >/dev/null 2>&1
 mkdir -p "$HOME"/.config/tmux/plugins >/dev/null 2>&1
@@ -212,11 +213,10 @@ ln -sf "$DOTFILES"/bash_aliases "$ALIASES"
 ln -sf "$DOTFILES"/tmux.conf "$TMUX"
 printf "%sINSTALLED%s\n" "${GREEN}" "${NORMAL}"
 
-# TODO #
 # Install bash completion user local
-if [ ! -f "$HOME/.config/bash/bash-completion/bash-completion" ]; then
+if [ ! -e "$HOME/.config/bash/completions/bash-completion/" ]; then
     printf "%s ➜  Installing bash completion...%s" "${BLUE}" "${NORMAL}"
-    sync_repo scop/bash-completion "$HOME/.config/bash/bash-completion/bash-completion"
+    sync_repo scop/bash-completion "$HOME/.config/bash/completions/bash-completion"
     printf "%sINSTALLED%s\n" "${GREEN}" "${NORMAL}"
 fi
 

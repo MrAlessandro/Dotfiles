@@ -110,8 +110,9 @@ fi
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
-  if [ -f "$HOME/.config/bash/bash-completion/bash-completion" ]; then
-    . "$HOME/.config/bash/bash-completion/bash-completion"
+  if [ -f $HOME/.config/bash/completions/bash-completion/bash-completion ]; then
+    . $HOME/.config/bash/completions/bash-completion/bash-completion
+  fi
 fi
 
 # Execute tmux at shell start up
