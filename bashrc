@@ -118,6 +118,14 @@ if ! shopt -oq posix; then
   fi
 fi
 
-if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
-  exec tmux
+# Execute tmux at shell start up
+if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+    tmux attach -t $USER || tmux new -s $USER
 fi
+
+# Kill tmux server on terminal close
+function close_tmux
+{
+    tmux kill-server > /dev/null 2>&1
+}
+trap close_tmux EXIT

@@ -48,14 +48,14 @@ command -v git >/dev/null 2>&1 || {
 }
 
 # Check curl
-command -v curl >/dev/null 2>&1 || 
+command -v curl >/dev/null 2>&1 ||
 {
     echo "${RED}Error: curl is not installed${NORMAL}" >&2
     exit 1
 }
 
 # Sync repository
-sync_repo() 
+sync_repo()
 {
     repo_uri="$1"
     repo_path="$2"
@@ -83,17 +83,17 @@ is_linux()
     [ "$OS" = "Linux" ]
 }
 
-is_debian() 
+is_debian()
 {
     command -v apt >/dev/null 2>&1 || command -v apt-get >/dev/null 2>&1
 }
 
-is_arch() 
+is_arch()
 {
     command -v yay >/dev/null 2>&1 || command -v pacman >/dev/null 2>&1
 }
 
-sync_brew_package() 
+sync_brew_package()
 {
     if ! command -v brew >/dev/null 2>&1; then
         echo "${RED}Error: brew is not found${NORMAL}" >&2
@@ -107,7 +107,7 @@ sync_brew_package()
     fi
 }
 
-sync_apt_package() 
+sync_apt_package()
 {
     if command -v apt >/dev/null 2>&1; then
         sudo apt upgrade -y "${1}" >/dev/null
@@ -119,7 +119,7 @@ sync_apt_package()
     fi
 }
 
-sync_arch_package() 
+sync_arch_package()
 {
     if command -v yay >/dev/null F; then
         yay -Su --noconfirm "${1}" >/dev/null
@@ -132,14 +132,14 @@ sync_arch_package()
 }
 
 # Clean all configurations
-clean_dotfiles() 
+clean_dotfiles()
 {
     confs=".bashrc
-	   .profile
-	   .bash_profile
-	   .bash_login
-	   .bash_aliases
-	   .tmux.conf"
+       .profile
+       .bash_profile
+       .bash_login
+       .bash_aliases
+       .tmux.conf"
 
     for c in ${confs}; do
         [ -f "$HOME"/"${c}" ] && mv "$HOME"/"${c}" "$HOME"/"${c}".bak
@@ -153,13 +153,13 @@ clean_dotfiles()
 YES=0
 NO=1
 
-promote_yn() 
+promote_yn()
 {
-        printf "%s ➜  %s%s [y/N]: " "${YELLOW}" "${1}" "${NORMAL}" 
-        
+        printf "%s ➜  %s%s [y/N]: " "${YELLOW}" "${1}" "${NORMAL}"
+
         eval "${2}"=$NO
         read -r yn
-    
+
         case $yn in
                 [Yy]* )    eval "${2}"=$YES;;
                 [Nn]*|'' ) eval "${2}"=$NO;;
@@ -172,6 +172,8 @@ printf "%s ➜  Creating default configurations folders...%s" "${BLUE}" "${NORMA
 mkdir -p "$HOME"/.config >/dev/null 2>&1
 mkdir -p "$HOME"/.config/bash >/dev/null 2>&1
 mkdir -p "$HOME"/.config/less >/dev/null 2>&1
+mkdir -p "$HOME"/.config/tmux >/dev/null 2>&1
+mkdir -p "$HOME"/.config/tmux/plugins >/dev/null 2>&1
 mkdir -p "$HOME"/.cache >/dev/null 2>&1
 printf "%sCREATED%s\n" "${GREEN}" "${NORMAL}"
 
@@ -180,7 +182,7 @@ printf "%sCREATED%s\n" "${GREEN}" "${NORMAL}"
 if [ -d "$TMUX" ] || [ -f "$FZF" ] || [ -d "$EMACSD" ] || [ -f "$BASH" ] || [ -f "$PROFILE" ] || [ -f "$ALIASES" ]; then
         continue=$NO
         promote_yn "Do you want to reset all configurations? [y/N]: " "continue"
-    
+
         if [ "$continue" -eq $YES ]; then
                 clean_dotfiles
         fi
@@ -190,10 +192,10 @@ fi
 if is_mac; then
         if ! command -v brew >/dev/null 2>&1; then
                 printf "%s ➜  Installing Homebrew...%s" "${BLUE}" "${NORMAL}"
-                
+
                 # Install homebrew
                 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-                
+
                 printf "%sINSTALLED%s\n" "${GREEN}" "${NORMAL}"
         fi
 fi
@@ -211,7 +213,7 @@ ln -sf "$DOTFILES"/tmux.conf "$TMUX"
 printf "%sINSTALLED%s\n" "${GREEN}" "${NORMAL}"
 
 # Installing emacs
-command -v emacs >/dev/null 2>&1 || 
+command -v emacs >/dev/null 2>&1 ||
 {
         printf "%s ➜  Installing emacs...%s" "${BLUE}" "${NORMAL}"
 
@@ -224,7 +226,7 @@ command -v emacs >/dev/null 2>&1 ||
                         sync_apt_package emacs
                 fi
         fi
-        
+
         printf "%sINSTALLED%s\n" "${GREEN}" "${NORMAL}"
 }
 
@@ -233,10 +235,10 @@ sync_repo noMYfault/MYmacs "$EMACSD"
 printf "%sRETRIEVED%s\n" "${GREEN}" "${NORMAL}"
 
 # Tmux
-command -v tmux >/dev/null 2>&1 || 
+command -v tmux >/dev/null 2>&1 ||
 {
         printf "%s ➜  Installing tmux...%s" "${BLUE}" "${NORMAL}"
-        
+
         if is_mac; then
                 sync_brew_package tmux
         elif is_linux; then
@@ -246,16 +248,21 @@ command -v tmux >/dev/null 2>&1 ||
                         sync_apt_package tmux
                 fi
         fi
-        
+
         printf "%sINSTALLED%s\n" "${GREEN}" "${NORMAL}"
+
+        printf "%s ➜  Installing tmux plugin manager...%s" "${BLUE}" "${NORMAL}"
+        sync_repo tmux-plugins/tpm "$HOME"/.config/tmux
+        printf "%sINSTALLED%s\n" "${GREEN}" "${NORMAL}"
+
 }
 
 
 # Ripgrep
-command -v rg >/dev/null 2>&1 || 
+command -v rg >/dev/null 2>&1 ||
 {
         printf "%s ➜  Installing ripgrep (rg)...%s" "${BLUE}" "${NORMAL}"
-        
+
         if is_mac; then
                 sync_brew_package ripgrep
         elif is_linux; then
@@ -265,17 +272,17 @@ command -v rg >/dev/null 2>&1 ||
                         sync_apt_package ripgrep
                 fi
         fi
-        
+
         printf "%sINSTALLED%s\n" "${GREEN}" "${NORMAL}"
 }
 
 
 
 # BAT
-command -v bat >/dev/null 2>&1 || 
+command -v bat >/dev/null 2>&1 ||
 {
         printf "%s ➜  Installing BAT...%s" "${BLUE}" "${NORMAL}"
-        
+
         if is_mac; then
                 sync_brew_package bat
         elif is_linux; then
@@ -285,15 +292,15 @@ command -v bat >/dev/null 2>&1 ||
                         sync_apt_package bat
                 fi
         fi
-        
+
         printf "%sINSTALLED%s\n" "${GREEN}" "${NORMAL}"
 }
 
 # FD
-command -v bat >/dev/null 2>&1 || 
+command -v bat >/dev/null 2>&1 ||
 {
         printf "%s ➜  Installing FD...%s" "${BLUE}" "${NORMAL}"
-        
+
         if is_mac; then
             sync_brew_package fd
         elif is_linux; then
@@ -303,25 +310,25 @@ command -v bat >/dev/null 2>&1 ||
                         sync_apt_package fd-find
                 fi
         fi
-        
+
         printf "%sINSTALLED%s\n" "${GREEN}" "${NORMAL}"
 }
 
 # FZF
-command -v bat >/dev/null 2>&1 || 
+command -v bat >/dev/null 2>&1 ||
 {
         printf "%s ➜  Installing FZF...%s" "${BLUE}" "${NORMAL}"
-        
+
         if is_mac; then
-	        sync_brew_package fzf
+            sync_brew_package fzf
         elif is_linux; then
-	        if is_arch; then
-        	        sync_arch_package fzf
+            if is_arch; then
+                    sync_arch_package fzf
                 elif is_debian; then
                         sync_apt_package fzf
                 fi
         fi
-        
+
         printf "%sINSTALLED%s\n" "${GREEN}" "${NORMAL}"
 }
 
