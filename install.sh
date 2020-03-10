@@ -212,6 +212,14 @@ ln -sf "$DOTFILES"/bash_aliases "$ALIASES"
 ln -sf "$DOTFILES"/tmux.conf "$TMUX"
 printf "%sINSTALLED%s\n" "${GREEN}" "${NORMAL}"
 
+# TODO #
+# Install bash completion user local
+if [ ! -f "$HOME/.config/bash/bash-completion/bash-completion" ]; then
+    printf "%s ➜  Installing bash completion...%s" "${BLUE}" "${NORMAL}"
+    sync_repo scop/bash-completion "$HOME/.config/bash/bash-completion/bash-completion"
+    printf "%sINSTALLED%s\n" "${GREEN}" "${NORMAL}"
+fi
+
 # Installing emacs
 command -v emacs >/dev/null 2>&1 ||
 {
