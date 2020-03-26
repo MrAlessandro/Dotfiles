@@ -69,7 +69,7 @@ fi
 #export RIDER_PROPERTIES="$XDG_CONFIG_HOME/Rider"
 
 # set Gradle user directory
-export GRADLE_USER_HOME="$XDG_DATA_HOME/gradle"
+# export GRADLE_USER_HOME="$XDG_DATA_HOME/gradle"
 
 # Load bashrc file if running bash
 if [ -n "$BASH_VERSION" ]; then
