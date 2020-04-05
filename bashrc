@@ -23,6 +23,7 @@ esac
 function set_prompt
 {
 	local EXIT="$?" # store current exit code
+	local JOBS="$(jobs | wc -l | xargs)" # store background jobs amount
 
 	function parse_git_branch
 	{
@@ -63,7 +64,14 @@ function set_prompt
 			RET="${RED}✘${RESET}"
 		fi
 
-		export PS1="${RET} ${BOLD_GREEN}\u@\h${RESET}:${BOLD_BLUE}\w${PURPLE}$(parse_git_branch)${RESET}\$ "
+		# Check for background jobs
+		if [[ $JOBS -ne 0 ]]; then
+			JOBS="${BOLD_CYAN}${JOBS}⚙  "
+		else
+			JOBS=""
+		fi
+
+		export PS1="${RET} ${JOBS}${BOLD_GREEN}\u@\h${RESET}:${BOLD_BLUE}\w${PURPLE}$(parse_git_branch)${RESET}\$ "
 	else
 
 		# Check return status
@@ -73,7 +81,14 @@ function set_prompt
 			RET="✘"
 		fi
 
-		export PS1="${RET} \u@\h:\w$(parse_git_branch)\$"
+		# Check for background jobs
+		if [[ $JOBS -ne 0 ]]; then
+			JOBS="${JOBS}⚙  "
+		else
+			JOBS=""
+		fi
+
+		export PS1="${RET} ${JOBS}\u@\h:\w$(parse_git_branch)\$"
 	fi
 }
 export PROMPT_COMMAND="set_prompt${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
