@@ -2,133 +2,94 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
-# If not running interactively, don't do anything
+# If not running interactively, do not do anything
 case $- in
     *i*) ;;
       *) return;;
 esac
 
-# don't put duplicate lines or lines starting with space in the history.
-# See bash(1) for more options
-HISTCONTROL=ignoreboth
-
+# set the maximum number of commands to register in the bash history
+HISTSIZE=1024
+# set the maximum number of lines contained in the history file.
+HISTFILESIZE=2048
 # append to the history file, don't overwrite it
 shopt -s histappend
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
-
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
-shopt -s checkwinsize
-
-# If set, the pattern "**" used in a pathname expansion context will
-# match all files and zero or more directories and subdirectories.
-#shopt -s globstar
-
-# make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
-
-# set a fancy prompt (non-color, unless we know we "want" color)
+# check if colors are supported by current terminal
 case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
+    xterm-color|*-256color) COLOR_PROMPT="YES";;
 esac
 
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-#force_color_prompt=yes
+function set_prompt
+{
+	local EXIT="$?" # store current exit code
 
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-    # We have color support; assume it's compliant with Ecma-48
-    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-    # a case would tend to support setf rather than setaf.)
-    color_prompt=yes
-    else
-    color_prompt=
-    fi
-fi
+	function parse_git_branch
+	{
+    	git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+	}
 
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-    export CLICOLOR=1
-    export LSCOLORS=ExFxBxDxCxegedabagacad
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
+	#----------------------------------------------------------------------------#
+	# Bash text colour specification:  \e[<STYLE>;<COLOUR>m
+	# (Note: \e = \033 (oct) = \x1b (hex) = 27 (dec) = "Escape")
+	# Styles:  0=normal, 1=bold, 2=dimmed, 4=underlined, 7=highlighted
+	# Colours: 31=red, 32=green, 33=yellow, 34=blue, 35=purple, 36=cyan, 37=white
+	#----------------------------------------------------------------------------#
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
+	# define colors
+	local RED='\[\033[0;31m\]' # Red
+	local GREEN='\[\033[0;32m\]' # Green
+	local YELLOW='\[\033[0;33m\]' # Yellow
+	local BLUE='\[\033[0;34m\]' # Blue
+	local PURPLE='\[\033[0;35m\]' # Purple
+	local CYAN='\[\033[0;36m\]' # Cyan
 
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
+	local BOLD_RED='\[\033[1;31m\]' # Bold red
+	local BOLD_GREEN='\[\033[1;32m\]' # Bold green
+	local BOLD_YELLOW='\[\033[1;33m\]' # Bold yellow
+	local BOLD_BLUE='\[\033[1;34m\]' # Bold blue
+	local BOLD_PURPLE='\[\033[1;35m\]' # Bold purple
+	local BOLD_CYAN='\[\033[1;36m\]' # Bold cyan
 
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
+	local RESET="\[\033[00m\]" # Reset
 
-# colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+	# Check for colors avaiability in prompt
+	if [ "${COLOR_PROMPT}" = "YES" ]; then
 
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
+		# Check return status
+		if [[ $EXIT -eq 0 ]]; then
+			RET="${GREEN}✔${RESET}"
+		else
+			RET="${RED}✘${RESET}"
+		fi
 
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+		export PS1="${RET} ${BOLD_GREEN}\u@\h${RESET}:${BOLD_BLUE}\w${PURPLE}$(parse_git_branch)${RESET}\$ "
+	else
 
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+		# Check return status
+		if [[ $EXIT -eq 0 ]]; then
+			RET="✔"
+		else
+			RET="✘"
+		fi
+
+		export PS1="${RET} \u@\h:\w$(parse_git_branch)\$"
+	fi
+}
+export PROMPT_COMMAND="set_prompt${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+
+
+# load aliases definitions if are present
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if ! shopt -oq posix; then
-  if [ -f $HOME/.config/bash/completions/bash-completion/bash-completion ]; then
-    . $HOME/.config/bash/completions/bash-completion/bash-completion
-  fi
-
-  if [ -f $HOME/.config/bash/completions/git-completion.bash ]; then
-    . $HOME/.config/bash/completions/git-completion.bash
-  fi
+# load bash completion
+if [ -f /opt/local/etc/profile.d/bash_completion.sh ]; then
+	. /opt/local/etc/profile.d/bash_completion.sh
 fi
 
-# Execute tmux at shell start up
-if command -v tmux &> /dev/null && [ -z "$TMUX" ] && ! ps -p $PPID | grep -q JetBrains; then
-    tmux attach -t $USER || tmux new -s $USER
+# load z command
+if [ -f /opt/local/etc/profile.d/z.sh ]; then
+	source /opt/local/etc/profile.d/z.sh
 fi
-
-# Kill tmux server on terminal close
-function close_tmux
-{
-    tmux kill-server > /dev/null 2>&1
-}
-
-
-trap close_tmux EXIT
