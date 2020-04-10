@@ -12,7 +12,7 @@ DOTFILES="profile"
 DOTFILES="bash_profile:${DOTFILES}"
 DOTFILES="bashrc:${DOTFILES}"
 DOTFILES="tmux.conf:${DOTFILES}"
-DOTFILES="emace.d:${DOTFILES}"
+DOTFILES="emacs.d:${DOTFILES}"
 
 rm -r "${DOTFILES_HOME}"
 rm -r "${EMACS_HOME}"
