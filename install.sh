@@ -132,16 +132,17 @@ if [ ! -d "${DOTFILES_HOME}" ]; then
     spinner $!
     printf "%sCLONED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
 else
-    cd "${DOTFILES_HOME}" || exit 1
+    cd "${DOTFILES_HOME}" || exit 1 
     git pull --rebase --stat origin master > /dev/null 2>&1 &
     spinner $!
-    cd - || exit 1
+    printf "%sPULLED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
+    cd "${OLDPWD}" || exit 1 
 fi
 
 # ask for backup
 BACKUP=""
 while [ -z "${BACKUP}" ]; do
-    printf "%sDo you want to backup all of your actual dotfiles (y/n)? %s" "${MAGENTA}" "${NORMAL}"
+    printf "%sDo you want to backup all of your actual dotfiles [y/n]? %s" "${MAGENTA}" "${NORMAL}"
     read -r BACKUP
 
     case $BACKUP in
@@ -152,7 +153,7 @@ while [ -z "${BACKUP}" ]; do
 done
 
 # do backup if wanted
-if [ "${BACKUP}" ]; then
+if [ "${BACKUP}" = "0" ]; then
     # save actual dotfiles 
     printf "%sSaving actual dotfiles in \"%s\"...%s " "${MAGENTA}" "${DOTFILES_BACKUP_DIR}" "${NORMAL}"
     for DOTFILE in ${DOTFILES}; do
