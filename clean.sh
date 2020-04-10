@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# dotiles dir
-DOTFILES_HOME="${HOME}/.dotfiles"
 # emacs directory
 EMACS_HOME="${HOME}/.emacs.d"
 
@@ -14,8 +12,7 @@ DOTFILES="bashrc:${DOTFILES}"
 DOTFILES="tmux.conf:${DOTFILES}"
 DOTFILES="emacs.d:${DOTFILES}"
 
-rm -r "${DOTFILES_HOME}"
-rm -r "${EMACS_HOME}"
+rm -rf "${EMACS_HOME}"
 
 for DOTFILE in ${DOTFILES}; do
     # check if selected dotfiles exists
