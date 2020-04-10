@@ -195,18 +195,18 @@ printf "%sLINKED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
 
 
 # cloning MYmacs repository in the home directory
-printf "%sCloning MYmacs repository in \"%s\"...%s " "${MAGENTA}" "${EMACS_HOME}" "${NORMAL}"
-if [ ! -d "${EMACS_HOME}" ]; then
-    mkdir "${EMACS_HOME}"
-    git clone --depth 1 "https://github.com/GitMYfault/MYmacs.git" "${EMACS_HOME}" > /dev/null 2>&1 &
-    spinner $!
-    printf "%sCLONED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
-else
-    cd "${EMACS_HOME}" || exit 1
-    git pull --rebase --stat origin master > /dev/null 2>&1 &
-    spinner $!
-    cd - || exit 1
-fi
+# printf "%sCloning MYmacs repository in \"%s\"...%s " "${MAGENTA}" "${EMACS_HOME}" "${NORMAL}"
+# if [ ! -d "${EMACS_HOME}" ]; then
+#     mkdir "${EMACS_HOME}"
+#     git clone --depth 1 "https://github.com/GitMYfault/MYmacs.git" "${EMACS_HOME}" > /dev/null 2>&1 &
+#     spinner $!
+#     printf "%sCLONED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
+# else
+#     cd "${EMACS_HOME}" || exit 1
+#     git pull --rebase --stat origin master > /dev/null 2>&1 &
+#     spinner $!
+#     cd - || exit 1
+# fi
 
 
 
