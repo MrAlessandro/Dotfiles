@@ -10,6 +10,8 @@
 OS="$(uname -s)"
 # dotiles dir
 DOTFILES_HOME="${HOME}/.dotfiles"
+# emacs directory
+EMACS_HOME="${HOME}/.emacs.d"
 # dofiles backup directory 
 DOTFILES_BACKUP_DIR="${HOME}/DotfilesBackUp"
 
@@ -20,6 +22,7 @@ DOTFILES="profile"
 DOTFILES="bash_profile:${DOTFILES}"
 DOTFILES="bashrc:${DOTFILES}"
 DOTFILES="tmux.conf:${DOTFILES}"
+DOTFILES="emace.d:${DOTFILES}"
 
 # check if stdout is a terminal...
 if test -t 1; then
@@ -186,5 +189,36 @@ for DOTFILE in ${DOTFILES}; do
         ln -sf "${DOTFILES_HOME}/${DOTFILE}" "${HOME}/.${DOTFILE}" >/dev/null 2>&1
     fi
 done
-# removing complete
+# linking complete
 printf "%sLINKED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
+
+
+# cloning MYmacs repository in the home directory
+printf "%sCloning MYmacs repository in \"%s\"...%s " "${MAGENTA}" "${EMACS_HOME}" "${NORMAL}"
+if [ ! -d "${DOTFILES_HOME}" ]; then
+    mkdir "${DOTFILES_HOME}"
+    git clone --depth 1 "https://github.com/GitMYfault/MYmacs.git" "${EMACS_HOME}" > /dev/null 2>&1 &
+    spinner $!
+    printf "%sCLONED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
+else
+    cd "${EMACS_HOME}" || exit 1
+    git pull --rebase --stat origin master > /dev/null 2>&1 &
+    spinner $!
+    cd - || exit 1
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
