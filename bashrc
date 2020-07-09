@@ -24,7 +24,9 @@ function set_prompt
 {
 	local EXIT="$?" # store current exit code
 	local JOBS="$(jobs | wc -l | xargs)" # store background jobs amount
+	local PYTHON_VIRTUALENV=""
 
+	# determine active git branch.
 	function parse_git_branch
 	{
     	git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
@@ -71,7 +73,12 @@ function set_prompt
 			JOBS=""
 		fi
 
-		export PS1="${RET} ${JOBS}${BOLD_GREEN}\u@\h${RESET}:${BOLD_BLUE}\w${PURPLE}$(parse_git_branch)${RESET}\$ "
+		# Check for active virtualenv
+		if [ "${VIRTUAL_ENV}" ]; then
+			PYTHON_VIRTUALENV="${BLUE}($(basename "${VIRTUAL_ENV}"))${RESET}"
+		fi
+
+		export PS1="${RET} ${PYTHON_VIRTUALENV}${JOBS}${BOLD_GREEN}\u@\h${RESET}:${BOLD_BLUE}\w${PURPLE}$(parse_git_branch)${RESET}\$ "
 	else
 
 		# Check return status
@@ -88,7 +95,13 @@ function set_prompt
 			JOBS=""
 		fi
 
-		export PS1="${RET} ${JOBS}\u@\h:\w$(parse_git_branch)\$"
+		# Check for active virtualenv
+		if [ "${VIRTUAL_ENV}" ]; then
+			PYTHON_VIRTUALENV="($(basename "${VIRTUAL_ENV}"))"
+		fi
+
+
+		export PS1="${RET} ${PYTHON_VIRTUALENV}${JOBS}\u@\h:\w$(parse_git_branch)\$"
 	fi
 }
 export PROMPT_COMMAND="set_prompt${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
