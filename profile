@@ -46,6 +46,11 @@ if command -v emacs &> /dev/null; then
     export EDITOR="emacs -nw"
 fi
 
+# add python binaries to path
+if [ -d "${HOME}/Library/Python/3.7/bin" ]; then
+    export PATH="${HOME}/Library/Python/3.7/bin:${PATH}"
+fi
+
 # check if running bash
 if [ -n "$BASH_VERSION" ]; then
 
@@ -57,3 +62,5 @@ if [ -n "$BASH_VERSION" ]; then
     . "$HOME/.bashrc"
     fi
 fi
+
+export PATH="/Library/PostgreSQL/12/bin/:${PATH}"
