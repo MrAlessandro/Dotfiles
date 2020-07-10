@@ -51,6 +51,13 @@ if [ -d "${HOME}/Library/Python/3.7/bin" ]; then
     export PATH="${HOME}/Library/Python/3.7/bin:${PATH}"
 fi
 
+# add postgres binaries to path
+if [ -d "/opt/local/lib/postgresql12/bin/" ]; then
+    export PATH="/opt/local/lib/postgresql12/bin/:${PATH}"
+    alias start_pg_server="sudo su postgres -c '/opt/local/lib/postgresql12/bin/postgres -D /opt/local/var/db/postgresql12/defaultdb'"
+fi
+
+
 # check if running bash
 if [ -n "$BASH_VERSION" ]; then
 
@@ -59,8 +66,6 @@ if [ -n "$BASH_VERSION" ]; then
 
     # include .bashrc if it exists
     if [ -f "$HOME/.bashrc" ]; then
-    . "$HOME/.bashrc"
+    . "${HOME}/.bashrc"
     fi
 fi
-
-export PATH="/Library/PostgreSQL/12/bin/:${PATH}"
