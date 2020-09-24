@@ -8,10 +8,6 @@ case $- in
       *) return;;
 esac
 
-# set the maximum number of commands to register in the bash history
-HISTSIZE=1024
-# set the maximum number of lines contained in the history file.
-HISTFILESIZE=2048
 # append to the history file, don't overwrite it
 shopt -s histappend
 
@@ -47,6 +43,7 @@ function set_prompt
 	local PURPLE='\[\033[0;35m\]' # Purple
 	local CYAN='\[\033[0;36m\]' # Cyan
 
+	local BOLD='\[\033[1m\]' # Bold
 	local BOLD_RED='\[\033[1;31m\]' # Bold red
 	local BOLD_GREEN='\[\033[1;32m\]' # Bold green
 	local BOLD_YELLOW='\[\033[1;33m\]' # Bold yellow
@@ -121,3 +118,9 @@ fi
 if [ -f /opt/local/etc/profile.d/z.sh ]; then
 	source /opt/local/etc/profile.d/z.sh
 fi
+
+# Print a random, interesting, adage
+if command -v fortune >/dev/null; then
+    fortune
+fi
+

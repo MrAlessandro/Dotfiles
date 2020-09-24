@@ -18,11 +18,15 @@ DOTFILES_BACKUP_DIR="${HOME}/DotfilesBackUp"
 # set Internal Field Separator
 IFS=": "
 # dotfiles
-DOTFILES="profile"
+DOTFILES="env"
+DOTFILES="profile:${DOTFILES}"
+DOTFILES="zprofile:${DOTFILES}"
+DOTFILES="zshrc:${DOTFILES}"
+DOTFILES="zlogin:${DOTFILES}"
 DOTFILES="bash_profile:${DOTFILES}"
+DOTFILES="bash_login:${DOTFILES}"
 DOTFILES="bashrc:${DOTFILES}"
 DOTFILES="tmux.conf:${DOTFILES}"
-DOTFILES="emace.d:${DOTFILES}"
 
 # check if stdout is a terminal...
 if test -t 1; then
@@ -60,7 +64,7 @@ fi
 
 # checking root permission
 # if [ "$(whoami)" != "root" ]; then
-#     printf "%s%sPlease run this script as root or using sudo\%sn" "${BOLD}" "${RED}" "${NORMAL}" 1>&2
+#     printf "%s%sPlease run this script as root or using sudo%s\n" "${BOLD}" "${RED}" "${NORMAL}" 1>&2
 #     exit
 # fi
 
@@ -156,13 +160,13 @@ done
 if [ "${BACKUP}" = "0" ]; then
     # save actual dotfiles 
     printf "%sSaving actual dotfiles in \"%s\"...%s " "${MAGENTA}" "${DOTFILES_BACKUP_DIR}" "${NORMAL}"
+    # create backup directory if it does not exist
+    if [ ! -d "${DOTFILES_BACKUP_DIR}" ]; then
+        mkdir -p "${DOTFILES_BACKUP_DIR}"
+    fi
     for DOTFILE in ${DOTFILES}; do
         # check if selected dotfiles exists
         if [ -f "${HOME}/.${DOTFILE}" ]; then
-            # create backup directory if it does not exist
-            if [ ! -d "${DOTFILES_BACKUP_DIR}" ]; then
-                mkdir -p "${DOTFILES_BACKUP_DIR}"
-            fi
             # copy dotfile in backup directory
             cp -r "${HOME}/.${DOTFILE}" "${DOTFILES_BACKUP_DIR}/${DOTFILE}.backup" >/dev/null 2>&1
         fi
