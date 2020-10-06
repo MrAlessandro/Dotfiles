@@ -47,3 +47,8 @@ fi
 if [ -d "${HOME}/Library/Python/3.7/bin" ]; then
     export PATH="${HOME}/Library/Python/3.7/bin:${PATH}"
 fi
+
+# add postgres binaries to path
+if [ -d "/opt/local/lib/postgresql13/bin/" ]; then
+    export PATH="/opt/local/lib/postgresql13/bin/:${PATH}"
+fi
