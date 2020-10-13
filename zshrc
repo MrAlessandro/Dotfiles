@@ -70,7 +70,7 @@ if [ "${COLOR_PROMPT}" = "YES" ]; then
 		fi
 	}
 
-	export PS1='$(virtualenv_info)%(1j.%F{cyan}%j⚙%f  .)%B%F{green}%n@%M%f:%F{blue}%~%b%f${vcs_info_msg_0_}\$ '
+	export PS1='$(virtualenv_info)%(1j.%F{cyan}%j⚙%f  .)%B%F{green}%n@%m%f:%F{blue}%~%b%f${vcs_info_msg_0_}\$ '
 	export RPS1="%(?.%F{green}✔%f.%F{red}✘%f)"
 else
 	# Check for active virtualenv
