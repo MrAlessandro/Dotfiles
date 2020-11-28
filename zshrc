@@ -4,7 +4,7 @@ case "$TERM" in
 esac
 
 # Load completion initialization function
-autoload -Uz compinit 
+autoload -Uz compinit
 # Initialize completion
 compinit
 
@@ -56,32 +56,37 @@ setopt prompt_subst
 autoload -Uz vcs_info
 zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' formats " %F{magenta}(%b)%f"
-precmd() { 
-	vcs_info 
+precmd() {
+    vcs_info
 }
 
 export VIRTUAL_ENV_DISABLE_PROMPT=yes
-	
+
 if [ "${COLOR_PROMPT}" = "YES" ]; then
-	# Check for active virtualenv
-	function virtualenv_info {
-		if [ "${VIRTUAL_ENV}" ]; then
-			echo "%F{blue}($(basename ${VIRTUAL_ENV}))%f " 
-		fi
-	}
+    # Check for active virtualenv
+    function virtualenv_info {
+        if [ "${VIRTUAL_ENV}" ]; then
+            echo "%F{blue}($(basename ${VIRTUAL_ENV}))%f "
+        fi
+    }
 
-	export PS1='$(virtualenv_info)%(1j.%F{cyan}%j⚙%f  .)%B%F{green}%n@%M%f:%F{blue}%~%b%f${vcs_info_msg_0_}\$ '
-	export RPS1="%(?.%F{green}✔%f.%F{red}✘%f)"
+    export PS1='$(virtualenv_info)%(1j.%F{cyan}%j⚙%f  .)%B%F{green}%n@%M%f:%F{blue}%~%b%f${vcs_info_msg_0_}\$ '
+    export RPS1="%(?.%F{green}✔%f.%F{red}✘%f)"
 else
-	# Check for active virtualenv
-	function virtualenv_info {
-		if [ "${VIRTUAL_ENV}" ]; then
-			echo "($(basename ${VIRTUAL_ENV})) " 
-		fi
-	}
+    # Check for active virtualenv
+    function virtualenv_info {
+        if [ "${VIRTUAL_ENV}" ]; then
+            echo "($(basename ${VIRTUAL_ENV})) "
+        fi
+    }
 
-	export PS1='$(virtualenv_info)%(1j.%j⚙%  .)%n@%M:%~${vcs_info_msg_0_}\$ '
-	export RPS1="%(?.✔.✘)"
+    export PS1='$(virtualenv_info)%(1j.%j⚙%  .)%n@%M:%~${vcs_info_msg_0_}\$ '
+    export RPS1="%(?.✔.✘)"
+fi
+
+# load aliases definitions if are present
+if [ -f ~/.aliases ]; then
+    . ~/.aliases
 fi
 
 # Print a random, interesting, adage
