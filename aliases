@@ -1,0 +1,9 @@
+alias ..="cd .."
+alias ll="ls -la"
+alias ~="cd ~"
+
+if [ -n "$EDITOR" ]; then
+    alias edit="${EDITOR} "
+else
+    alias edit="nano "
+fi

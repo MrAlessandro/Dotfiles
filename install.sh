@@ -12,13 +12,14 @@ OS="$(uname -s)"
 DOTFILES_HOME="${HOME}/.dotfiles"
 # emacs directory
 EMACS_HOME="${HOME}/.emacs.d"
-# dofiles backup directory 
+# dofiles backup directory
 DOTFILES_BACKUP_DIR="${HOME}/DotfilesBackUp"
 
 # set Internal Field Separator
 IFS=": "
 # dotfiles
 DOTFILES="env"
+DOTFILES="aliases:${DOTFILES}"
 DOTFILES="profile:${DOTFILES}"
 DOTFILES="zprofile:${DOTFILES}"
 DOTFILES="zshrc:${DOTFILES}"
@@ -106,7 +107,7 @@ printf "%sFOUND%s\n" "${BOLD}${GREEN}" "${NORMAL}"
 
 # dotfiles installation
 printf "%s\n\t\tDOTFILES INSTALLATION%s\n\n" "${BOLD}${CYAN}" "${NORMAL}"
-spinner() 
+spinner()
 {
     COMMAND_PID=$1 # Process Id of the previous running command
     SPIN='⣷ ⣯ ⣟ ⡿ ⢿ ⣻ ⣽ ⣾'
@@ -136,11 +137,11 @@ if [ ! -d "${DOTFILES_HOME}" ]; then
     spinner $!
     printf "%sCLONED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
 else
-    cd "${DOTFILES_HOME}" || exit 1 
+    cd "${DOTFILES_HOME}" || exit 1
     git pull --rebase --stat origin master > /dev/null 2>&1 &
     spinner $!
     printf "%sPULLED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
-    cd "${OLDPWD}" || exit 1 
+    cd "${OLDPWD}" || exit 1
 fi
 
 # ask for backup
@@ -158,7 +159,7 @@ done
 
 # do backup if wanted
 if [ "${BACKUP}" = "0" ]; then
-    # save actual dotfiles 
+    # save actual dotfiles
     printf "%sSaving actual dotfiles in \"%s\"...%s " "${MAGENTA}" "${DOTFILES_BACKUP_DIR}" "${NORMAL}"
     # create backup directory if it does not exist
     if [ ! -d "${DOTFILES_BACKUP_DIR}" ]; then
@@ -175,7 +176,7 @@ if [ "${BACKUP}" = "0" ]; then
     printf "%sSAVED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
 fi
 
-# remove actual dotfiles 
+# remove actual dotfiles
 printf "%sRemoving actual dotfiles from home directory ...%s " "${MAGENTA}" "${NORMAL}"
 for DOTFILE in ${DOTFILES}; do
     # check if selected dotfiles exists
@@ -211,19 +212,3 @@ printf "%sLINKED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
 #     spinner $!
 #     cd - || exit 1
 # fi
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
