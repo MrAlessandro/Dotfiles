@@ -18,3 +18,4 @@ fi
 if [ ! -d "${ZSH_CACHE_DIR}" ]; then
     mkdir -p "${ZSH_CACHE_DIR}" >/dev/null 2>&1
 fi
+
