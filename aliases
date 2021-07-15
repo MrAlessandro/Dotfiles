@@ -1,6 +1,6 @@
-alias ls="ls --color=auto"
+alias ls="ls"
 alias ..="cd .."
-alias ll="ls --color=auto -la"
+alias ll="ls -la"
 alias ~="cd ~"
 
 if [ -n "$EDITOR" ]; then
