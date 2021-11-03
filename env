@@ -53,20 +53,21 @@ if [ -d "/opt/local/lib/postgresql13/bin/" ]; then
     export PATH="/opt/local/lib/postgresql13/bin/:${PATH}"
 fi
 
-#
-if [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ]; then
-  . "$(brew --prefix)/opt/nvm/nvm.sh"
+# add nvm binaries to path
+if command -v nvm &> /dev/null; then
 
-  NVM_DIR="$HOME/.nvm"
+  export NVM_DIR="$HOME/.nvm"
   if [ ! -d "${HOME}/.nvm" ]; then
     mkdir "${NVM_DIR}"
   fi
 
-  export NVM_DIR;
+  if [ -s "${NVM_DIR}/nvm.sh"]; then
+    . "${NVM_DIR}/nvm.sh"
+  fi
 
-
-  if [ -s "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" ]; then
-    . "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm"
+  if [ -s "${NVM_DIR}/bash_completion"]; then
+    . "${NVM_DIR}/bash_completionit"
   fi
 
 fi
+
