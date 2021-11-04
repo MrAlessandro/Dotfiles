@@ -1,4 +1,4 @@
-# LIST BASIC OF PACKEGES TO INSTALL (via macport)
+# LIST OF BASIC PACKEGES TO INSTALL (via macport)
 
 bat
 python37
