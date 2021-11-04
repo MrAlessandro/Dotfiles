@@ -4,6 +4,6 @@ Dotfiles containing some of my favorite configurations, theme and customizations
 ## Installation
 You can try these configurations simply executing this in your shell: (require `curl`)
 
-```
+```sh
 /bin/sh -c "$(curl -fsSL https://raw.githubusercontent.com/Alt-Jandro/Dotfiles/master/install.sh)"
 ```
