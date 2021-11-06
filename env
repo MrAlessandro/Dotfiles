@@ -53,6 +53,7 @@ if [ -d "/opt/local/lib/postgresql13/bin/" ]; then
     export PATH="/opt/local/lib/postgresql13/bin/:${PATH}"
 fi
 
+# TODO: REMOVE THIS IN FUTURE (handle nvm versions with macports)
 # add nvm binaries to path
 if command -v nvm &> /dev/null; then
 
@@ -70,4 +71,3 @@ if command -v nvm &> /dev/null; then
   fi
 
 fi
-

@@ -2,7 +2,7 @@
 #############################################################
 # Set development environment on Linux/macOS quickly.
 # Almost taken from: https://github.com/seagle0128/dotfiles/blob/master/install.sh
-# Thanks to :Vincent Zhang
+# Thanks to: Vincent Zhang
 # Author: Alessandro Meschi
 #############################################################
 
@@ -14,6 +14,17 @@ DOTFILES_HOME="${HOME}/.dotfiles"
 EMACS_HOME="${HOME}/.emacs.d"
 # dofiles backup directory
 DOTFILES_BACKUP_DIR="${HOME}/DotfilesBackUp"
+# config home
+if [ ! -n "${XDG_CONFIG_HOME}" ]; then
+  XDG_CONFIG_HOME="${HOME}/.config"
+fi
+# zsh home
+ZSH_HOME="${XDG_CONFIG_HOME}/zsh"
+# zsh plugin dir
+ZSH_PLUGINS_DIR="${ZSH_HOME}/plugins"
+# save current directory
+CURRENT_DIRECTORY="$(pwd)"
+
 
 # set Internal Field Separator
 IFS=": "
@@ -76,6 +87,10 @@ if [ "${OS}" = "Darwin" ]; then
     if command -v port >/dev/null; then
         printf "%s%s%s\n" "${BOLD}${GREEN}" "$(command -v port)" "${NORMAL}"
         alias install_package="sudo port install"
+    elif [ -x "/opt/local/bin/port" ]; then
+        # This if-then branch is useful when port is intalled but not in PATH
+        printf "%s%s%s\n" "${BOLD}${GREEN}" "/opt/local/bin/port" "${NORMAL}"
+        alias install_package="sudo /opt/local/bin/port install"
     elif command -v brew >/dev/null; then
         printf "%s%s%s\n" "${BOLD}${GREEN}" "$(command -v brew)" "${NORMAL}"
         alias install_package="brew install"
@@ -104,6 +119,8 @@ if ! command -v git >/dev/null; then
 fi
 printf "%sFOUND%s\n" "${BOLD}${GREEN}" "${NORMAL}"
 
+# move in home directory
+cd "${home}"
 
 # dotfiles installation
 printf "%s\n\t\tDOTFILES INSTALLATION%s\n\n" "${BOLD}${CYAN}" "${NORMAL}"
@@ -197,6 +214,86 @@ for DOTFILE in ${DOTFILES}; do
 done
 # linking complete
 printf "%sLINKED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
+
+
+printf "%s\n\t\tADDING EXTRA FEATURES%s\n\n" "${BOLD}${CYAN}" "${NORMAL}"
+# ask for synthax highlighting installation
+ZSH_SINTHAX_HIGHLIGHT_FLAG=""
+while [ -z "${ZSH_SINTHAX_HIGHLIGHT_FLAG}" ]; do
+    printf "%sDo you want to install zsh synthax highlighting [y/n]? %s" "${MAGENTA}" "${NORMAL}"
+    read -r ZSH_SINTHAX_HIGHLIGHT_FLAG
+
+    case $ZSH_SINTHAX_HIGHLIGHT_FLAG in
+        [Yy]* ) ZSH_SINTHAX_HIGHLIGHT_FLAG=0 && break;;
+        [Nn]* ) ZSH_SINTHAX_HIGHLIGHT_FLAG=1 && break;;
+        * ) ZSH_SINTHAX_HIGHLIGHT_FLAG="" && printf "%sPlease answer yes or no.%s\n" "${BOLD}${RED}" "${NORMAL}";;
+    esac
+done
+
+# install synthax highlighting if wanted
+if [ "${ZSH_SINTHAX_HIGHLIGHT_FLAG}" = "0" ]; then
+  ZSH_SINTHAX_HIGHLIGHT_DIR="${ZSH_PLUGINS_DIR}/zsh-syntax-highlighting"
+
+  # create zsh plugins dir if it does not exist
+  if [ ! -d "${ZSH_PLUGINS_DIR}" ]; then
+      mkdir -p "${ZSH_PLUGINS_DIR}" >/dev/null 2>&1
+  fi
+
+  printf "%sCloning zsh synthax highlighting repository in \"%s\"...%s " "${MAGENTA}" "${ZSH_SINTHAX_HIGHLIGHT_DIR}" "${NORMAL}"
+  if [ ! -d "${ZSH_SINTHAX_HIGHLIGHT_DIR}" ]; then
+    git clone --depth 1 "https://github.com/zsh-users/zsh-syntax-highlighting.git" "${ZSH_SINTHAX_HIGHLIGHT_DIR}" > /dev/null 2>&1 &
+    spinner $!
+    printf "%sCLONED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
+  else
+    cd "${ZSH_SINTHAX_HIGHLIGHT_DIR}" || exit 1
+    git pull --rebase --stat origin master > /dev/null 2>&1 &
+    spinner $!
+    printf "%sPULLED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
+    cd "${OLDPWD}" || exit 1
+  fi
+fi
+
+
+# ask for autosuggestion installation
+ZSH_AUTOSUGGESTION_FLAG=""
+while [ -z "${ZSH_AUTOSUGGESTION_FLAG}" ]; do
+    printf "%sDo you want to install zsh autosuggestion [y/n]? %s" "${MAGENTA}" "${NORMAL}"
+    read -r ZSH_AUTOSUGGESTION_FLAG
+
+    case $ZSH_AUTOSUGGESTION_FLAG in
+        [Yy]* ) ZSH_AUTOSUGGESTION_FLAG=0 && break;;
+        [Nn]* ) ZSH_AUTOSUGGESTION_FLAG=1 && break;;
+        * ) ZSH_AUTOSUGGESTION_FLAG="" && printf "%sPlease answer yes or no.%s\n" "${BOLD}${RED}" "${NORMAL}";;
+    esac
+done
+
+# install autosuggestion if wanted
+if [ "${ZSH_AUTOSUGGESTION_FLAG}" = "0" ]; then
+  ZSH_AUTOSUGGESTION_DIR="${ZSH_PLUGINS_DIR}/zsh-autosuggestions"
+
+  # create zsh plugins dir if it does not exist
+  if [ ! -d "${ZSH_PLUGINS_DIR}" ]; then
+      mkdir -p "${ZSH_PLUGINS_DIR}" >/dev/null 2>&1
+  fi
+
+  printf "%sCloning zsh autosuggestion repository in \"%s\"...%s " "${MAGENTA}" "${ZSH_AUTOSUGGESTION_DIR}" "${NORMAL}"
+  if [ ! -d "${ZSH_AUTOSUGGESTION_DIR}" ]; then
+    git clone --depth 1 "https://github.com/zsh-users/zsh-autosuggestions.git" "${ZSH_AUTOSUGGESTION_DIR}" > /dev/null 2>&1 &
+    spinner $!
+    printf "%sCLONED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
+  else
+    cd "${ZSH_AUTOSUGGESTION_DIR}" || exit 1
+    git pull --rebase --stat origin master > /dev/null 2>&1 &
+    spinner $!
+    printf "%sPULLED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
+    cd "${OLDPWD}" || exit 1
+  fi
+fi
+
+
+# restore previous current directory
+cd "${CURRENT_DIRECTORY}"
+
 
 
 # cloning MYmacs repository in the home directory
