@@ -48,8 +48,8 @@ export LESS_TERMCAP_ue=$(printf '\e[0m') # leave underline mode
 export LESS_TERMCAP_us=$(printf '\e[04;36m') # enter underline mode – cyan
 
 # set default editor
-if command -v emacs &> /dev/null; then
-    export EDITOR="emacs -nw"
+if command -v micro &> /dev/null; then
+    export EDITOR="micro"
 fi
 
 # add python binaries to path
