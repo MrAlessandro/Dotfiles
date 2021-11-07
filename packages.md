@@ -10,3 +10,4 @@
   **NOTE**: You can choose another verson of python simply replacing the port suffix '*37*' with '*38*', '*39*', '*310*'... as you prefer
 - **unrar**
 - **fortune**
+- **micro** 
