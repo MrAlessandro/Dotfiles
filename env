@@ -1,5 +1,5 @@
 # ~/.env: should be executed by the command interpreter for
-#   login shells.
+#         login shells.
 
 # set PATH so it includes user's private bin if it exists
 if [ -d "${HOME}/bin" ] ; then
@@ -50,6 +50,11 @@ export LESS_TERMCAP_us=$(printf '\e[04;36m') # enter underline mode – cyan
 # set default editor
 if command -v micro &> /dev/null; then
     export EDITOR="micro"
+fi
+
+# set JAVA_HOME variable
+if command -v /usr/libexec/java_home &> /dev/null; then
+    export JAVA_HOME="$(/usr/libexec/java_home)"
 fi
 
 # add python binaries to path

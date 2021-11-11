@@ -104,11 +104,6 @@ function set_prompt
 export PROMPT_COMMAND="set_prompt${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
 
 
-# load aliases definitions if are present
-if [ -f ~/.aliases ]; then
-    . ~/.aliases
-fi
-
 # load bash completion
 if [ -f /opt/local/etc/profile.d/bash_completion.sh ]; then
     . /opt/local/etc/profile.d/bash_completion.sh
@@ -122,4 +117,10 @@ fi
 # Print a random, interesting, adage
 if command -v fortune >/dev/null; then
     fortune
+fi
+
+
+# load aliases definitions if are present
+if [ -f ~/.aliases ]; then
+    source ~/.aliases
 fi

@@ -91,11 +91,6 @@ else
     export RPS1="%(?.✔.✘)"
 fi
 
-# load aliases definitions if are present
-if [ -f ~/.aliases ]; then
-    . ~/.aliases
-fi
-
 # Print a random, interesting, adage
 if command -v fortune >/dev/null; then
     fortune
@@ -103,3 +98,8 @@ fi
 
 # Special iTerm integration
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# load aliases definitions if are present
+if [ -f ~/.aliases ]; then
+    source ~/.aliases
+fi

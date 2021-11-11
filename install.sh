@@ -40,6 +40,8 @@ DOTFILES="bash_login:${DOTFILES}"
 DOTFILES="bashrc:${DOTFILES}"
 DOTFILES="tmux.conf:${DOTFILES}"
 
+CONFIGDIRS="micro"
+
 # check if stdout is a terminal...
 if test -t 1; then
 
@@ -82,18 +84,22 @@ fi
 
 # check for package manager
 printf "%sChecking for supported package manager...%s " "${MAGENTA}" "${NORMAL}"
+PACKAGE_MANAGER=""
 if [ "${OS}" = "Darwin" ]; then
 
     if command -v port >/dev/null; then
         printf "%s%s%s\n" "${BOLD}${GREEN}" "$(command -v port)" "${NORMAL}"
         alias install_package="sudo port install"
+        PACKAGE_MANAGER="port"
     elif [ -x "/opt/local/bin/port" ]; then
         # This if-then branch is useful when port is intalled but not in PATH
         printf "%s%s%s\n" "${BOLD}${GREEN}" "/opt/local/bin/port" "${NORMAL}"
         alias install_package="sudo /opt/local/bin/port install"
+        PACKAGE_MANAGER="port"
     elif command -v brew >/dev/null; then
         printf "%s%s%s\n" "${BOLD}${GREEN}" "$(command -v brew)" "${NORMAL}"
         alias install_package="brew install"
+        PACKAGE_MANAGER="brew"
     else
         printf "%sNOT FOUND → Install MacPorts or brew to get this script works%s\n" "${BOLD}${RED}" "${NORMAL}"
         exit 1
@@ -104,6 +110,7 @@ elif [ "${OS}" = "Linux" ]; then
     if command -v apt-get >/dev/null; then
         printf "%s%s%s\n" "${BOLD}${GREEN}" "$(command -v apt-get)" "${NORMAL}"
         alias install_package="sudo apt-get install"
+        PACKAGE_MANAGER="apt"
     else
         printf "%sNOT FOUND → Install apt-get to get this script works%s\n" "${BOLD}${RED}" "${NORMAL}"
         exit 1
@@ -120,7 +127,7 @@ fi
 printf "%sFOUND%s\n" "${BOLD}${GREEN}" "${NORMAL}"
 
 # move in home directory
-cd "${home}"
+cd "${HOME}"
 
 # dotfiles installation
 printf "%s\n\t\tDOTFILES INSTALLATION%s\n\n" "${BOLD}${CYAN}" "${NORMAL}"
@@ -178,10 +185,12 @@ done
 if [ "${BACKUP}" = "0" ]; then
     # save actual dotfiles
     printf "%sSaving actual dotfiles in \"%s\"...%s " "${MAGENTA}" "${DOTFILES_BACKUP_DIR}" "${NORMAL}"
+
     # create backup directory if it does not exist
     if [ ! -d "${DOTFILES_BACKUP_DIR}" ]; then
         mkdir -p "${DOTFILES_BACKUP_DIR}"
     fi
+
     for DOTFILE in ${DOTFILES}; do
         # check if selected dotfiles exists
         if [ -f "${HOME}/.${DOTFILE}" ]; then
@@ -189,6 +198,15 @@ if [ "${BACKUP}" = "0" ]; then
             cp -r "${HOME}/.${DOTFILE}" "${DOTFILES_BACKUP_DIR}/${DOTFILE}.backup" >/dev/null 2>&1
         fi
     done
+
+    for CONFIGDIR in ${CONFIGDIRS}; do
+   		# check if selected config directory exists
+  		if [ -d "${XDG_CONFIG_HOME}/${CONFIGDIR}" ]; then
+    			# copy config directory in backup directory
+    			cp -r "${XDG_CONFIG_HOME}/${CONFIGDIR}" "${DOTFILES_BACKUP_DIR}/${CONFIGDIR}.backup"
+  		fi
+   	done
+
     # saving complete
     printf "%sSAVED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
 fi
@@ -201,6 +219,13 @@ for DOTFILE in ${DOTFILES}; do
         rm -rf "${HOME}/.${DOTFILE}" >/dev/null 2>&1
     fi
 done
+
+for CONFIGDIR in ${CONFIGDIRS}; do
+    # check if selected config dirextory exists
+    if [ -d  "${XDG_CONFIG_HOME}/${CONFIGDIR}" ]; then
+        rm -rf "${XDG_CONFIG_HOME}/${CONFIGDIR}" >/dev/null 2>&1
+    fi
+done
 # removing complete
 printf "%sREMOVED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
 
@@ -210,6 +235,13 @@ for DOTFILE in ${DOTFILES}; do
     # check if selected dotfiles exists
     if [ -f "${DOTFILES_HOME}/${DOTFILE}" ]; then
         ln -sf "${DOTFILES_HOME}/${DOTFILE}" "${HOME}/.${DOTFILE}" >/dev/null 2>&1
+    fi
+done
+
+for CONFIGDIR in ${CONFIGDIRS}; do
+    # check if selected dotfiles exists
+    if [ -d  "${DOTFILES_HOME}/${CONFIGDIR}" ]; then
+        ln -sf "${DOTFILES_HOME}/${CONFIGDIR}" "${XDG_CONFIG_HOME}/${CONFIGDIR}" >/dev/null 2>&1
     fi
 done
 # linking complete
@@ -290,22 +322,55 @@ if [ "${ZSH_AUTOSUGGESTION_FLAG}" = "0" ]; then
   fi
 fi
 
+# ask for micro editor installation
+MICRO_EDITOR_FLAG=""
+while [ -z "${MICRO_EDITOR_FLAG}" ]; do
+    printf "%sDo you want to install micro editor [y/n]? %s" "${MAGENTA}" "${NORMAL}"
+    read -r MICRO_EDITOR_FLAG
+
+    case $MICRO_EDITOR_FLAG in
+        [Yy]* ) MICRO_EDITOR_FLAG=0 && break;;
+        [Nn]* ) MICRO_EDITOR_FLAG=1 && break;;
+        * ) MICRO_EDITOR_FLAG="" && printf "%sPlease answer yes or no.%s\n" "${BOLD}${RED}" "${NORMAL}";;
+    esac
+done
+
+# install micro editor if wanted
+if [ "${MICRO_EDITOR_FLAG}" = "0" ]; then
+
+  printf "%sInstalling micro editor...%s " "${MAGENTA}" "${NORMAL}"
+  install_package micro > /dev/null 2>&1 &
+  spinner $!
+  printf "%sINSTALLED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
+fi
+
+
+# ask for Java JDK 8 installation
+JAVA_JDK_FLAG=""
+while [ -z "${JAVA_JDK_FLAG}" ]; do
+    printf "%sDo you want to install Java JDK 8 [y/n]? %s" "${MAGENTA}" "${NORMAL}"
+    read -r JAVA_JDK_FLAG
+
+    case $JAVA_JDK_FLAG in
+        [Yy]* ) JAVA_JDK_FLAG=0 && break;;
+        [Nn]* ) JAVA_JDK_FLAG=1 && break;;
+        * ) JAVA_JDK_FLAG="" && printf "%sPlease answer yes or no.%s\n" "${BOLD}${RED}" "${NORMAL}";;
+    esac
+done
+
+# install micro editor if wanted
+if [ "${JAVA_JDK_FLAG}" = "0" ]; then
+  printf "%sInstalling Java JDK 8 (can take a while)...%s " "${MAGENTA}" "${NORMAL}"
+  JDK_8_PACKAGE_NAME=""
+  case $PACKAGE_MANAGER in
+    port ) JDK_8_PACKAGE_NAME="openjdk8-temurin" && break;;
+    brew ) JDK_8_PACKAGE_NAME="openjdk@8" && break;;
+    apt ) JDK_8_PACKAGE_NAME="openjdk-8-jdk" && break;;
+  esac
+  install_package $JDK_8_PACKAGE_NAME > /dev/null 2>&1 &
+  spinner $!
+  printf "%sINSTALLED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
+fi
 
 # restore previous current directory
 cd "${CURRENT_DIRECTORY}"
-
-
-
-# cloning MYmacs repository in the home directory
-# printf "%sCloning MYmacs repository in \"%s\"...%s " "${MAGENTA}" "${EMACS_HOME}" "${NORMAL}"
-# if [ ! -d "${EMACS_HOME}" ]; then
-#     mkdir "${EMACS_HOME}"
-#     git clone --depth 1 "https://github.com/GitMYfault/MYmacs.git" "${EMACS_HOME}" > /dev/null 2>&1 &
-#     spinner $!
-#     printf "%sCLONED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
-# else
-#     cd "${EMACS_HOME}" || exit 1
-#     git pull --rebase --stat origin master > /dev/null 2>&1 &
-#     spinner $!
-#     cd - || exit 1
-# fi
