@@ -25,11 +25,11 @@ setopt inc_append_history
 setopt share_history
 # Place the curson at the end of the line when navigating commands history
 autoload -U history-search-end
-zle -N history-beginning-search-backward-end history-search-end
-zle -N history-beginning-search-forward-end history-search-end
+#zle -N history-beginning-search-backward-end history-search-end
+#zle -N history-beginning-search-forward-end history-search-end
 # Consider actual command line content when navigating commands history with arrow keys
-bindkey "^[[A" history-beginning-search-backward-end # UP
-bindkey "^[[B" history-beginning-search-forward-end # DOWN
+#bindkey "^[[A" history-beginning-search-backward-end # UP
+#bindkey "^[[B" history-beginning-search-forward-end # DOWN
 
 # COMPLETION OPTIONS
 # Move the cursor to the end of the word after accepting a completion.
