@@ -69,7 +69,12 @@ fi
 
 # set flutter version manager home directory
 if command -v fvm &> /dev/null; then
-    export FVM_HOME="~/.fvm"
+    export FVM_HOME="${HOME}/.fvm"
+fi
+
+# add flutter version manager default binaries
+if [ -d "${FVM_HOME}/default/bin" ]; then
+    export PATH="${FVM_HOME}/default/bin:${PATH}"
 fi
 
 
