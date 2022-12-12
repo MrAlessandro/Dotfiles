@@ -67,6 +67,19 @@ if [ -d "/opt/local/lib/postgresql13/bin/" ]; then
     export PATH="/opt/local/lib/postgresql13/bin/:${PATH}"
 fi
 
+# set node version manager home directory
+if command -v nvm &> /dev/null; then
+     export NVM_DIR="$HOME/.nvm"
+fi
+# load nvm
+if [ -s "/usr/local/opt/nvm/nvm.sh" ]; then
+ 	source /usr/local/opt/nvm/nvm.sh
+fi
+# load nvm completions
+if [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ]; then
+	source /usr/local/opt/nvm/etc/bash_completion.d/nvm
+fi
+
 # set flutter version manager home directory
 if command -v fvm &> /dev/null; then
     export FVM_HOME="${HOME}/.fvm"
@@ -87,11 +100,11 @@ if command -v nvm &> /dev/null; then
     mkdir "${NVM_DIR}"
   fi
 
-  if [ -s "${NVM_DIR}/nvm.sh"]; then
+  if [ -s "${NVM_DIR}/nvm.sh" ]; then
     . "${NVM_DIR}/nvm.sh"
   fi
 
-  if [ -s "${NVM_DIR}/bash_completion"]; then
+  if [ -s "${NVM_DIR}/bash_completion" ]; then
     . "${NVM_DIR}/bash_completionit"
   fi
 
