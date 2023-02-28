@@ -90,6 +90,12 @@ if [ -d "${FVM_HOME}/default/bin" ]; then
     export PATH="${FVM_HOME}/default/bin:${PATH}"
 fi
 
+# add AdnroidStudio executable path
+androidStudioToolboxBase=${HOME}/Library/Application\ Support/JetBrains/Toolbox/apps/AndroidStudio/ch-0
+if [ -d "${androidStudioToolboxBase}" ]; then
+	androidStudioToolboxVersion=$(ls ${androidStudioToolboxBase})
+	export CAPACITOR_ANDROID_STUDIO_PATH=${androidStudioToolboxBase}/${androidStudioToolboxVersion}/Android\ Studio.app/
+fi
 
 # TODO: REMOVE THIS IN FUTURE (handle nvm versions with macports)
 # add nvm binaries to path
