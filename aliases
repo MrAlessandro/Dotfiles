@@ -1,4 +1,4 @@
-alias ls="ls"
+alias ls="ls --color=auto"
 alias ..="cd .."
 alias ll="ls -la"
 alias ~="cd ~"
@@ -8,3 +8,5 @@ if [ -n "$EDITOR" ]; then
 else
     alias edit="nano "
 fi
+
+alias enable_ipv6='sed -i "/net.ipv6.conf.all.disable_ipv6.*/d" /etc/sysctl.conf && sysctl -q -p && echo 0 > /proc/sys/net/ipv6/conf/all/disable_ipv6 && sed -i "s/#//" /etc/netplan/01-netcfg.yaml && netplan generate && netplan apply'
