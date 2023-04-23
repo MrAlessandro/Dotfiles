@@ -67,6 +67,7 @@ precmd() {
     vcs_info
 }
 
+export NVM_DETECTED=''
 export VIRTUAL_ENV_DISABLE_PROMPT=yes
 
 if [ "${COLOR_PROMPT}" = "YES" ]; then
@@ -77,7 +78,13 @@ if [ "${COLOR_PROMPT}" = "YES" ]; then
         fi
     }
 
-    export PS1='$(virtualenv_info)%(1j.%F{cyan}%j⚙%f  .)%B%F{green}%n@%m%f:%F{blue}%~%b%f${vcs_info_msg_0_}\$ '
+    function node_info {
+        if [ ! -z "$NVM_DETECTED" ]; then
+            echo "%F{magenta}[%F{green}Node %F{red}${NVM_DETECTED}%F{magenta}] %F{reset_color%}"
+        fi
+    }
+
+    export PS1='$(node_info)$(virtualenv_info)%(1j.%F{cyan}%j⚙%f  .)%B%F{green}%n@%m%f:%F{blue}%~%b%f${vcs_info_msg_0_}\$ '
     export RPS1="%(?.%F{green}✔%f.%F{red}✘%f)"
 else
     # Check for active virtualenv
@@ -87,7 +94,14 @@ else
         fi
     }
 
-    export PS1='$(virtualenv_info)%(1j.%j⚙%  .)%n@%M:%~${vcs_info_msg_0_}\$ '
+    function node_info {
+        if [which node &> /dev/null]; then
+            echo '[Node($(node -v))[ '
+        fi
+    }
+
+
+    export PS1='$(node_info)$(virtualenv_info)%(1j.%j⚙%  .)%n@%M:%~${vcs_info_msg_0_}\$ '
     export RPS1="%(?.✔.✘)"
 fi
 
@@ -103,3 +117,29 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 if [ -f ~/.aliases ]; then
     source ~/.aliases
 fi
+
+# # place this after nvm initialization!
+# autoload -U add-zsh-hook
+# load-nvmrc() {
+#   local node_version="$(nvm version)"
+#   local nvmrc_path="$(nvm_find_nvmrc)"
+
+#   if [ -n "$nvmrc_path" ]; then
+#     local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+#     NVM_DETECTED="$nvmrc_node_version"
+#     if [ "$nvmrc_node_version" = "N/A" ]; then     
+#         :
+#         NVM_DETECTED=""
+#     elif [ "$nvmrc_node_version" != "$node_version" ]; then
+#       NVM_DETECTED="$nvmrc_node_version"
+#       nvm use &> /dev/null
+#       echo "Using Node $nvmrc_node_version" 
+#     fi
+#   elif [ "$node_version" != "$(nvm version default)" ]; then
+#     echo "Reverting to nvm default version"
+#     NVM_DETECTED=""
+#     nvm use default
+#   fi
+# }
+# add-zsh-hook chpwd load-nvmrc
+# load-nvmrc
