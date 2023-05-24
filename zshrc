@@ -86,11 +86,11 @@ if [ "${COLOR_PROMPT}" = "YES" ]; then
 
     function ssh_info {
         if [[ -n "$SSH_CLIENT" ]]; then
-            echo "%F{yellow}[ssh>_]" # The session is SSH
+            echo "%F{yellow}[ssh>_] %f" # The session is SSH
         fi
     }
 
-    export PS1='%(ssh_info)$(virtualenv_info)%(1j.%F{cyan}%j⚙%f  .)%B%F{green}%n@%m%f:%F{blue}%~%b%f${vcs_info_msg_0_}\$ '
+    export PS1='%$(ssh_info)$(virtualenv_info)%(1j.%F{cyan}%j⚙%f  .)%B%F{green}%n@%m%f:%F{blue}%~%b%f${vcs_info_msg_0_}\$ '
     export RPS1="%(?.%F{green}✔%f.%F{red}✘%f)"
 else
     # Check for active virtualenv
