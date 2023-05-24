@@ -86,7 +86,7 @@ if [ "${COLOR_PROMPT}" = "YES" ]; then
 
     function ssh_info {
         if [[ -n "$SSH_CLIENT" ]]; then
-            echo "%F{yellow}\[ssh>_\] %f" # The session is SSH
+            echo "%F{yellow}[ssh>_] %f" # The session is SSH
         fi
     }
 
