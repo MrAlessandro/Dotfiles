@@ -109,6 +109,10 @@ if [ -d "${FVM_HOME}/default/bin" ]; then
     export PATH="${FVM_HOME}/default/bin:${PATH}"
 fi
 
+if [ -d "/usr/local/opt/postgresql@15/bin" ]; then
+	export PATH="/usr/local/opt/postgresql@15/bin:${PATH}"
+fi
+
 # add AdnroidStudio executable path
 androidStudioToolboxBase=${HOME}/Library/Application\ Support/JetBrains/Toolbox/apps/AndroidStudio/ch-0
 if [ -d "${androidStudioToolboxBase}" ]; then
