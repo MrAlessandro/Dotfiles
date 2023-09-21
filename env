@@ -109,8 +109,14 @@ if [ -d "${FVM_HOME}/default/bin" ]; then
     export PATH="${FVM_HOME}/default/bin:${PATH}"
 fi
 
+# add postgres 15 binaries to PATH
 if [ -d "/usr/local/opt/postgresql@15/bin" ]; then
 	export PATH="/usr/local/opt/postgresql@15/bin:${PATH}"
+fi
+
+# add visual studio code binaries to PATH
+if [ -d "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" ]; then
+    export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:${PATH}"
 fi
 
 # add AdnroidStudio executable path
