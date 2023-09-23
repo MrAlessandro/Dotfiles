@@ -86,7 +86,7 @@ if [ "${COLOR_PROMPT}" = "YES" ]; then
 
     function ssh_info {
         if [[ -n "$SSH_CLIENT" ]]; then
-            echo "%F{yellow}[ssh>_]%f" # The session is SSH
+            echo "%F{yellow}[ssh>_] %f" # The session is SSH
         fi
     }
 
@@ -100,13 +100,19 @@ else
         fi
     }
 
-    function node_info {
-        if [which node &>/dev/null]; then
-            echo '[Node($(node -v))[ '
+    # function node_info {
+    #     if [which node &>/dev/null]; then
+    #         echo '[Node($(node -v))[ '
+    #     fi
+    # }
+
+    function ssh_info {
+        if [[ -n "$SSH_CLIENT" ]]; then
+            echo "[ssh>_] %f" # The session is SSH
         fi
     }
 
-    export PS1='$(node_info)$(virtualenv_info)%(1j.%j⚙%  .)%n@%M:%~${vcs_info_msg_0_}\$ '
+    export PS1='$(virtualenv_info)%(1j.%j⚙%  .)%n@%M:%~${vcs_info_msg_0_}\$ '
     export RPS1="%(?.✔.✘)"
 fi
 
