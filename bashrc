@@ -125,9 +125,9 @@ if [ -f /opt/local/etc/profile.d/z.sh ]; then
 fi
 
 # Print a random, interesting, adage
-if command -v fortune >/dev/null; then
-    fortune
-fi
+# if command -v fortune >/dev/null; then
+#     fortune
+# fi
 
 
 # load aliases definitions if are present

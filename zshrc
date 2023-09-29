@@ -117,9 +117,9 @@ else
 fi
 
 # Print a random, interesting, adage
-if command -v fortune >/dev/null; then
-    fortune
-fi
+# if command -v fortune >/dev/null; then
+#     fortune
+# fi
 
 # Special iTerm integration
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
