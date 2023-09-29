@@ -81,7 +81,7 @@ function set_prompt
             SSH_SESSION="${YELLOW}[ssh>_] ${RESET}" # The session is SSH
         fi
 
-        export PS1="${RET} ${SSH_SESSION} ${PYTHON_VIRTUALENV}${JOBS}${BOLD_GREEN}\u@\h${RESET}:${BOLD_BLUE}\w${PURPLE}$(parse_git_branch)${RESET}\$ "
+        export PS1="${RET} ${SSH_SESSION}${PYTHON_VIRTUALENV}${JOBS}${BOLD_GREEN}\u@\h${RESET}:${BOLD_BLUE}\w${PURPLE}$(parse_git_branch)${RESET}\$ "
     else
 
         # Check return status
@@ -108,7 +108,7 @@ function set_prompt
             SSH_SESSION="[ssh>_] " # The session is SSH
         fi
 
-        export PS1="${RET} ${SSH_SESSION} ${PYTHON_VIRTUALENV}${JOBS}\u@\h:\w$(parse_git_branch)\$"
+        export PS1="${RET} ${SSH_SESSION}${PYTHON_VIRTUALENV}${JOBS}\u@\h:\w$(parse_git_branch)\$"
     fi
 }
 export PROMPT_COMMAND="set_prompt${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
