@@ -28,6 +28,11 @@ if [ ! -d "${XDG_CONFIG_HOME}" ]; then
     mkdir "${XDG_CONFIG_HOME}" >/dev/null 2>&1
 fi
 
+# add sublime text binaries to path if exist
+if [ -d "/Applications/Sublime Text.app/Contents/SharedSupport/bin/" ]; then
+    export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin/:${PATH}"
+fi
+
 #History setup
 export HISTSIZE=100000
 export SAVEHIST=20000
