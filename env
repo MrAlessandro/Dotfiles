@@ -127,11 +127,20 @@ if [ -d "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" ]; the
     export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:${PATH}"
 fi
 
+# add dart third-party binaries to PATH
+if [ -d "$HOME/.pub-cache/bin" ]; then
+    export PATH="${HOME}/.pub-cache/bin:${PATH}"
+fi
+
 # add AdnroidStudio executable path
 androidStudioToolboxBase=${HOME}/Library/Application\ Support/JetBrains/Toolbox/apps/AndroidStudio/ch-0
 if [ -d "${androidStudioToolboxBase}" ]; then
     androidStudioToolboxVersion=$(ls ${androidStudioToolboxBase})
     export CAPACITOR_ANDROID_STUDIO_PATH=${androidStudioToolboxBase}/${androidStudioToolboxVersion}/Android\ Studio.app/
+fi
+androidStudioToolboxBase=${HOME}/Applications/Android\ Studio.app
+if [ -d "${androidStudioToolboxBase}" ]; then
+    export CAPACITOR_ANDROID_STUDIO_PATH=${androidStudioToolboxBase}/Contents/MacOS/studio
 fi
 
 # TODO: REMOVE THIS IN FUTURE (handle nvm versions with macports)
@@ -155,3 +164,9 @@ fi
 
 # customize jq command colors
 JQ_COLORS="1;30:0;37:0;37:0;37:0;32:1;37:1;37"
+
+# set .NET environment and add binaries
+if [ -d "$HOME/.dotnet" ]; then
+	export DOTNET_ROOT=$HOME/.dotnet 
+    export PATH="${PATH}:${DOTNET_ROOT}"
+fi
