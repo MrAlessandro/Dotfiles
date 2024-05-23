@@ -73,7 +73,11 @@ export VIRTUAL_ENV_DISABLE_PROMPT=yes
 if [ "${COLOR_PROMPT}" = "YES" ]; then
     # Check for active virtualenv
     function virtualenv_info {
-        if [ "${VIRTUAL_ENV}" ]; then
+        if [[ "${TERM_PROGRAM}" == "vscode" ]]; then
+            echo " ";
+            return;
+        fi
+        if [[ -n "${VIRTUAL_ENV}" ]]; then
             echo "%F{blue}($(basename ${VIRTUAL_ENV}))%f "
         fi
     }
@@ -95,7 +99,11 @@ if [ "${COLOR_PROMPT}" = "YES" ]; then
 else
     # Check for active virtualenv
     function virtualenv_info {
-        if [ "${VIRTUAL_ENV}" ]; then
+        if [[ "${TERM_PROGRAM}" == "vscode" ]]; then
+            echo " ";
+            return;
+        fi
+        if [[ -n "${VIRTUAL_ENV}" ]]; then
             echo "($(basename ${VIRTUAL_ENV})) "
         fi
     }
@@ -112,7 +120,7 @@ else
         fi
     }
 
-    export PS1='$(virtualenv_info)%(1j.%j⚙%  .)%n@%M:%~${vcs_info_msg_0_}\$ '
+    export PS1='$(ssh_info)$(virtualenv_info)%(1j.%j⚙%  .)%n@%M:%~${vcs_info_msg_0_}\$ '
     export RPS1="%(?.✔.✘)"
 fi
 
