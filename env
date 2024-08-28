@@ -110,11 +110,12 @@ fi
 # set flutter version manager home directory
 if command -v fvm &>/dev/null; then
     export FVM_HOME="${HOME}/.fvm"
+    export FVM_CACHE_PATH="${HOME}/.fvm"
 fi
 
 # add flutter version manager default binaries
-if [ -d "${FVM_HOME}/default/bin" ]; then
-    export PATH="${FVM_HOME}/default/bin:${PATH}"
+if [ -d "${FVM_CACHE_PATH}/default/bin" ]; then
+    export PATH="${FVM_CACHE_PATH}/default/bin:${PATH}"
 fi
 
 # add postgres 15 binaries to PATH
