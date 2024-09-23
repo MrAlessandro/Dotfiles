@@ -162,3 +162,15 @@ fi
 # }
 # add-zsh-hook chpwd load-nvmrc
 # load-nvmrc
+
+## [Completion]
+## Completion scripts setup. Remove the following line to uninstall
+[[ -f /Users/alessandro/.config/.dart-cli-completion/zsh-config.zsh ]] && . /Users/alessandro/.config/.dart-cli-completion/zsh-config.zsh || true
+## [/Completion]
+
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/alessandro/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/alessandro/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/alessandro/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/alessandro/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
