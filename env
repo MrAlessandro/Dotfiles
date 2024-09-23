@@ -109,7 +109,6 @@ fi
 
 # set flutter version manager home directory
 if command -v fvm &>/dev/null; then
-    export FVM_HOME="${HOME}/.fvm"
     export FVM_CACHE_PATH="${HOME}/.fvm"
 fi
 
