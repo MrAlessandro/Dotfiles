@@ -1,3 +1,4 @@
 micro/buffers/
 .idea/
 .vscode/
+*.backup
