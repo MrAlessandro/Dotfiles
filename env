@@ -48,6 +48,9 @@ export CLICOLOR=1
 # set colors used in ls command
 export LSCOLORS=ExFxBxDxCxegedabagacad
 
+# customize jq command colors
+export JQ_COLORS="1;30:0;37:0;37:0;37:0;32:1;37:1;37"
+
 # set up colors for man pages
 export LESS_TERMCAP_mb=$(printf '\e[01;31m') # enter blinking mode – red
 export LESS_TERMCAP_md=$(printf '\e[01;35m') # enter double-bright mode – bold, magenta
@@ -139,25 +142,8 @@ if [ -d "$HOME/.pub-cache/bin" ]; then
     export PATH="${HOME}/.pub-cache/bin:${PATH}"
 fi
 
-# add AdnroidStudio executable path
-androidStudioToolboxBase=${HOME}/Library/Application\ Support/JetBrains/Toolbox/apps/AndroidStudio/ch-0
-if [ -d "${androidStudioToolboxBase}" ]; then
-    androidStudioToolboxVersion=$(ls ${androidStudioToolboxBase})
-    export CAPACITOR_ANDROID_STUDIO_PATH=${androidStudioToolboxBase}/${androidStudioToolboxVersion}/Android\ Studio.app/
-fi
-androidStudioToolboxBase=${HOME}/Applications/Android\ Studio.app
-if [ -d "${androidStudioToolboxBase}" ]; then
-    export CAPACITOR_ANDROID_STUDIO_PATH=${androidStudioToolboxBase}/Contents/MacOS/studio
-fi
-androidStudioLauncher="/Applications/Android\ Studio.app/Contents/MacOS/studio "
-if [ -e "${androidStudioLauncher}" ]; then
-    export PATH="${PATH}:${androidStudioLauncher}"
-fi
-
-# TODO: REMOVE THIS IN FUTURE (handle nvm versions with macports)
 # add nvm binaries to path
 if command -v nvm &>/dev/null; then
-
     export NVM_DIR="$HOME/.nvm"
     if [ ! -d "${HOME}/.nvm" ]; then
         mkdir "${NVM_DIR}"
@@ -170,11 +156,7 @@ if command -v nvm &>/dev/null; then
     if [ -s "${NVM_DIR}/bash_completion" ]; then
         . "${NVM_DIR}/bash_completion"
     fi
-
 fi
-
-# customize jq command colors
-JQ_COLORS="1;30:0;37:0;37:0;37:0;32:1;37:1;37"
 
 # set .NET environment and add binaries
 if [ -d "$HOME/.dotnet" ]; then

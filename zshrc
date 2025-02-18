@@ -82,11 +82,11 @@ if [ "${COLOR_PROMPT}" = "YES" ]; then
         fi
     }
 
-    # function node_info {
-    #     if [ ! -z "$NVM_DETECTED" ]; then
-    #         echo "%F{magenta}[%F{green}Node %F{red}${NVM_DETECTED}%F{magenta}] %F{reset_color%}"
-    #     fi
-    # }
+    function node_info {
+        if [ ! -z "$NVM_DETECTED" ]; then
+            echo "${NVM_DETECTED} "
+        fi
+    }
 
     function ssh_info {
         if [[ -n "$SSH_CLIENT" ]]; then
@@ -94,7 +94,7 @@ if [ "${COLOR_PROMPT}" = "YES" ]; then
         fi
     }
 
-    export PS1='$(ssh_info)$(virtualenv_info)%(1j.%F{cyan}%j⚙%f  .)%B%F{green}%n@%m%f:%F{blue}%~%b%f${vcs_info_msg_0_}\$ '
+    export PS1='$(node_info)$(ssh_info)$(virtualenv_info)%(1j.%F{cyan}%j⚙%f  .)%B%F{green}%n@%m%f:%F{blue}%~%b%f${vcs_info_msg_0_}\$ '
     export RPS1="%(?.%F{green}✔%f.%F{red}✘%f)"
 else
     # Check for active virtualenv
@@ -138,30 +138,38 @@ if [ -f ~/.aliases ]; then
 fi
 
 # # place this after nvm initialization!
-# autoload -U add-zsh-hook
-# load-nvmrc() {
-#   local node_version="$(nvm version)"
-#   local nvmrc_path="$(nvm_find_nvmrc)"
+autoload -U add-zsh-hook
 
-#   if [ -n "$nvmrc_path" ]; then
-#     local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-#     NVM_DETECTED="$nvmrc_node_version"
-#     if [ "$nvmrc_node_version" = "N/A" ]; then
-#         :
-#         NVM_DETECTED=""
-#     elif [ "$nvmrc_node_version" != "$node_version" ]; then
-#       NVM_DETECTED="$nvmrc_node_version"
-#       nvm use &> /dev/null
-#       echo "Using Node $nvmrc_node_version"
-#     fi
-#   elif [ "$node_version" != "$(nvm version default)" ]; then
-#     echo "Reverting to nvm default version"
-#     NVM_DETECTED=""
-#     nvm use default
-#   fi
-# }
-# add-zsh-hook chpwd load-nvmrc
-# load-nvmrc
+load-nvmrc() {
+  local nvmrc_path
+  nvmrc_path="$(nvm_find_nvmrc)"
+
+  if [ -n "$nvmrc_path" ]; then
+    local nvmrc_node_version
+    nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+
+    if [ "$nvmrc_node_version" = "N/A" ]; then
+      if [ "${COLOR_PROMPT}" = "YES" ]; then
+        export NVM_DETECTED="%F{red}(⬡!)%f"
+      else
+        export NVM_DETECTED="(⬡!)"
+      fi
+    elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
+      nvm use &>/dev/null
+      if [ "${COLOR_PROMPT}" = "YES" ]; then
+        export NVM_DETECTED="%F{cyan}(⬡ $(cat "${nvmrc_path}"))%f"
+      else
+        export NVM_DETECTED="(⬡ $(cat "${nvmrc_path}"))"
+      fi
+    fi
+  elif [ -n "$(PWD=$OLDPWD nvm_find_nvmrc)" ] && [ "$(nvm version)" != "$(nvm version default)" ]; then
+    nvm use default &>/dev/null
+    export NVM_DETECTED=""
+  fi
+}
+
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc
 
 ## [Completion]
 ## Completion scripts setup. Remove the following line to uninstall
