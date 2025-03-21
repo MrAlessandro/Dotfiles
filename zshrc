@@ -144,6 +144,11 @@ load-nvmrc() {
   local nvmrc_path
   nvmrc_path="$(nvm_find_nvmrc)"
 
+  # Check if nvm_find_nvmrc is available
+  if ! command -v nvm_find_nvmrc &>/dev/null; then
+    return
+  fi
+
   if [ -n "$nvmrc_path" ]; then
     local nvmrc_node_version
     nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
@@ -182,3 +187,8 @@ if [ -f '/Users/alessandro/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/alessandro/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/alessandro/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/alessandro/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
