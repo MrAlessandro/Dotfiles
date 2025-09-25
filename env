@@ -88,23 +88,6 @@ if [ -d "/opt/local/lib/postgresql13/bin/" ]; then
     export PATH="/opt/local/lib/postgresql13/bin/:${PATH}"
 fi
 
-# set node version manager home directory
-if [ -d "$XDG_CONFIG_HOME/nvm" ] && [ -s "${XDG_CONFIG_HOME}/nvm/nvm.sh" ]; then
-    export NVM_DIR="$XDG_CONFIG_HOME/nvm"
-    source "${NVM_DIR}/nvm.sh"
-
-    if [ -s "$NVM_DIR/bash_completion" ]; then
-        source "$NVM_DIR/bash_completion"
-    fi
-elif [ -d "$HOME/.nvm" ] && [ -s "${HOME}/.nvm/nvm.sh" ]; then
-    export NVM_DIR="$HOME/.nvm"
-    source "${NVM_DIR}/nvm.sh"
-
-    if [ -s "$NVM_DIR/bash_completion" ]; then
-        source "$NVM_DIR/bash_completion"
-    fi
-fi
-
 # load cargo
 if [ -e "${HOME}/.cargo/env" ]; then
     source "$HOME/.cargo/env"
@@ -145,7 +128,7 @@ fi
 # add nvm binaries to path
 if command -v nvm &>/dev/null; then
     export NVM_DIR="$HOME/.nvm"
-    if [ ! -d "${HOME}/.nvm" ]; then
+    if [ ! -d "${NVM_DIR}" ]; then
         mkdir "${NVM_DIR}"
     fi
 
@@ -187,8 +170,19 @@ if [ -d "$HOME/Library/Android/sdk" ]; then
     fi
 fi
 
+# check for JetBrains Toolbox scripts
+if [ -d "$HOME/Library/Application Support/JetBrains/Toolbox/scripts" ]; then
+    export PATH="$HOME/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
+fi
+
 # configure jenv
 # if [ -e "/opt/homebrew/bin/jenv" ]; then
 #     export PATH="$HOME/.jenv/bin:$PATH"
 #     eval "$(jenv init -)"
 # fi
+
+if [ -d "$HOME/.pub-cache/bin" ]; then
+    export PATH="$PATH":"$HOME/.pub-cache/bin"
+fi
+
+export SENTRY_SKIP_DSYM_UPLOAD=false
