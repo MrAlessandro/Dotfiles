@@ -2,3 +2,4 @@ micro/buffers/
 .idea/
 .vscode/
 *.backup
+.DS_Store
