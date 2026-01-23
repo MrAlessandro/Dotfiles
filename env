@@ -27,6 +27,11 @@ if [ -d "/opt/local/sbin" ]; then
     export PATH="/opt/local/bin:${PATH}"
 fi
 
+# Antigravity
+if [ -d "/Users/alessandro/.antigravity/antigravity/bin" ]; then
+export PATH="/Users/alessandro/.antigravity/antigravity/bin:${PATH}"
+fi
+
 # set XDG config directory and create it if it does not exist
 export XDG_CONFIG_HOME="${HOME}/.config"
 if [ ! -d "${XDG_CONFIG_HOME}" ]; then
