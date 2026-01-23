@@ -2,7 +2,6 @@ alias ..="cd .."
 alias ls="ls --color=auto"
 alias ll="ls -lah"
 alias ~="cd ~"
-alias tree="tree -h -C"
 
 if [ -n "$EDITOR" ]; then
     alias edit="${EDITOR} "
