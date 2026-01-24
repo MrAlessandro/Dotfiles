@@ -6,6 +6,72 @@
 # Author: Alessandro Meschi
 #############################################################
 
+# Usage function
+usage() {
+    cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Options:
+    -y          Answer yes to all prompts
+    -n          Answer no to all prompts
+    -b          Enable backup of existing dotfiles
+    -B          Disable backup of existing dotfiles
+    -s          Enable zsh syntax highlighting
+    -S          Disable zsh syntax highlighting
+    -a          Enable zsh autosuggestions
+    -A          Disable zsh autosuggestions
+    -m          Enable micro editor installation
+    -M          Disable micro editor installation
+    -j          Enable Java JDK 8 installation
+    -J          Disable Java JDK 8 installation
+    -h          Show this help message
+
+Examples:
+    $(basename "$0") -y              # Install with all features
+    $(basename "$0") -n              # Install with no optional features
+    $(basename "$0") -b -s -a        # Backup + syntax highlighting + autosuggestions
+    $(basename "$0") -B -S -A -M -J  # No optional features (same as -n)
+EOF
+    exit 0
+}
+
+# Parse command line options
+YES_TO_ALL=""
+NO_TO_ALL=""
+while getopts "ynbBsSmMaAjJh" opt; do
+    case $opt in
+        y) YES_TO_ALL=1 ;;
+        n) NO_TO_ALL=1 ;;
+        b) BACKUP=0 ;;
+        B) BACKUP=1 ;;
+        s) ZSH_SINTHAX_HIGHLIGHT_FLAG=0 ;;
+        S) ZSH_SINTHAX_HIGHLIGHT_FLAG=1 ;;
+        a) ZSH_AUTOSUGGESTION_FLAG=0 ;;
+        A) ZSH_AUTOSUGGESTION_FLAG=1 ;;
+        m) MICRO_EDITOR_FLAG=0 ;;
+        M) MICRO_EDITOR_FLAG=1 ;;
+        j) JAVA_JDK_FLAG=0 ;;
+        J) JAVA_JDK_FLAG=1 ;;
+        h) usage ;;
+        *) usage ;;
+    esac
+done
+
+# Apply -y or -n flags (⚠️ Individual options take precedence)
+if [ -n "$YES_TO_ALL" ]; then
+    [ -z "$BACKUP" ] && BACKUP=0
+    [ -z "$ZSH_SINTHAX_HIGHLIGHT_FLAG" ] && ZSH_SINTHAX_HIGHLIGHT_FLAG=0
+    [ -z "$ZSH_AUTOSUGGESTION_FLAG" ] && ZSH_AUTOSUGGESTION_FLAG=0
+    [ -z "$MICRO_EDITOR_FLAG" ] && MICRO_EDITOR_FLAG=0
+    [ -z "$JAVA_JDK_FLAG" ] && JAVA_JDK_FLAG=0
+elif [ -n "$NO_TO_ALL" ]; then
+    [ -z "$BACKUP" ] && BACKUP=1
+    [ -z "$ZSH_SINTHAX_HIGHLIGHT_FLAG" ] && ZSH_SINTHAX_HIGHLIGHT_FLAG=1
+    [ -z "$ZSH_AUTOSUGGESTION_FLAG" ] && ZSH_AUTOSUGGESTION_FLAG=1
+    [ -z "$MICRO_EDITOR_FLAG" ] && MICRO_EDITOR_FLAG=1
+    [ -z "$JAVA_JDK_FLAG" ] && JAVA_JDK_FLAG=1
+fi
+
 # operative system
 OS="$(uname -s)"
 # dotiles dir
@@ -168,11 +234,10 @@ else
     cd "${OLDPWD}" || exit 1
 fi
 
-# ask for backup
-BACKUP=""
+# ask for backup (skip if already set via command line)
 while [ -z "${BACKUP}" ]; do
     printf "%sDo you want to backup all of your actual dotfiles [y/n]? %s" "${MAGENTA}" "${NORMAL}"
-    read -r BACKUP
+    read -r BACKUP </dev/tty || { printf "\n%sNon-interactive mode detected. Use -y or -n flag.%s\n" "${BOLD}${RED}" "${NORMAL}"; exit 1; }
 
     case $BACKUP in
         [Yy]* ) BACKUP=0 && break;;
@@ -249,11 +314,10 @@ printf "%sLINKED%s\n" "${BOLD}${GREEN}" "${NORMAL}"
 
 
 printf "%s\n\t\tADDING EXTRA FEATURES%s\n\n" "${BOLD}${CYAN}" "${NORMAL}"
-# ask for synthax highlighting installation
-ZSH_SINTHAX_HIGHLIGHT_FLAG=""
+# ask for synthax highlighting installation (skip if already set via command line)
 while [ -z "${ZSH_SINTHAX_HIGHLIGHT_FLAG}" ]; do
     printf "%sDo you want to install zsh synthax highlighting [y/n]? %s" "${MAGENTA}" "${NORMAL}"
-    read -r ZSH_SINTHAX_HIGHLIGHT_FLAG
+    read -r ZSH_SINTHAX_HIGHLIGHT_FLAG </dev/tty || { printf "\n%sNon-interactive mode detected. Use -y or -n flag.%s\n" "${BOLD}${RED}" "${NORMAL}"; exit 1; }
 
     case $ZSH_SINTHAX_HIGHLIGHT_FLAG in
         [Yy]* ) ZSH_SINTHAX_HIGHLIGHT_FLAG=0 && break;;
@@ -286,11 +350,10 @@ if [ "${ZSH_SINTHAX_HIGHLIGHT_FLAG}" = "0" ]; then
 fi
 
 
-# ask for autosuggestion installation
-ZSH_AUTOSUGGESTION_FLAG=""
+# ask for autosuggestion installation (skip if already set via command line)
 while [ -z "${ZSH_AUTOSUGGESTION_FLAG}" ]; do
     printf "%sDo you want to install zsh autosuggestion [y/n]? %s" "${MAGENTA}" "${NORMAL}"
-    read -r ZSH_AUTOSUGGESTION_FLAG
+    read -r ZSH_AUTOSUGGESTION_FLAG </dev/tty || { printf "\n%sNon-interactive mode detected. Use -y or -n flag.%s\n" "${BOLD}${RED}" "${NORMAL}"; exit 1; }
 
     case $ZSH_AUTOSUGGESTION_FLAG in
         [Yy]* ) ZSH_AUTOSUGGESTION_FLAG=0 && break;;
@@ -322,11 +385,10 @@ if [ "${ZSH_AUTOSUGGESTION_FLAG}" = "0" ]; then
   fi
 fi
 
-# ask for micro editor installation
-MICRO_EDITOR_FLAG=""
+# ask for micro editor installation (skip if already set via command line)
 while [ -z "${MICRO_EDITOR_FLAG}" ]; do
     printf "%sDo you want to install micro editor [y/n]? %s" "${MAGENTA}" "${NORMAL}"
-    read -r MICRO_EDITOR_FLAG
+    read -r MICRO_EDITOR_FLAG </dev/tty || { printf "\n%sNon-interactive mode detected. Use -y or -n flag.%s\n" "${BOLD}${RED}" "${NORMAL}"; exit 1; }
 
     case $MICRO_EDITOR_FLAG in
         [Yy]* ) MICRO_EDITOR_FLAG=0 && break;;
@@ -345,11 +407,10 @@ if [ "${MICRO_EDITOR_FLAG}" = "0" ]; then
 fi
 
 
-# ask for Java JDK 8 installation
-JAVA_JDK_FLAG=""
+# ask for Java JDK 8 installation (skip if already set via command line)
 while [ -z "${JAVA_JDK_FLAG}" ]; do
     printf "%sDo you want to install Java JDK 8 [y/n]? %s" "${MAGENTA}" "${NORMAL}"
-    read -r JAVA_JDK_FLAG
+    read -r JAVA_JDK_FLAG </dev/tty || { printf "\n%sNon-interactive mode detected. Use -y or -n flag.%s\n" "${BOLD}${RED}" "${NORMAL}"; exit 1; }
 
     case $JAVA_JDK_FLAG in
         [Yy]* ) JAVA_JDK_FLAG=0 && break;;
