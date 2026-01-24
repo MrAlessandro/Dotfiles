@@ -5,5 +5,5 @@ Dotfiles containing some of my favorite configurations, theme and customizations
 You can try these configurations simply executing this in your shell: (require `curl`)
 
 ```sh
-/bin/sh -c "$(curl -fsSL https://raw.githubusercontent.com/Alt-Jandro/Dotfiles/master/install.sh)"
+curl -fsSL https://raw.githubusercontent.com/MrAlessandro/Dotfiles/master/install.sh | /bin/sh -s -- -y -M -J
 ```
