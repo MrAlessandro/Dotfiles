@@ -88,11 +88,6 @@ if command -v pyenv &>/dev/null; then
     eval "$(pyenv init -)"
 fi
 
-# add postgres binaries to path
-if [ -d "/opt/local/lib/postgresql13/bin/" ]; then
-    export PATH="/opt/local/lib/postgresql13/bin/:${PATH}"
-fi
-
 # load cargo
 if [ -e "${HOME}/.cargo/env" ]; then
     source "$HOME/.cargo/env"
@@ -108,16 +103,19 @@ if [ -d "${FVM_CACHE_PATH}/default/bin" ]; then
     export PATH="${FVM_CACHE_PATH}/default/bin:${PATH}"
 fi
 
-# add postgres 15 binaries to PATH
-if [ -d "/usr/local/opt/postgresql@15/bin" ]; then
-	export PATH="/usr/local/opt/postgresql@15/bin:${PATH}"
-fi
-
-# add postgres 16 binaries to PATH
-if [ -d "/usr/local/opt/postgresql@16/bin" ]; then
+# add postgres binaries to PATH
+if [ -d "/usr/local/opt/postgresql@17/bin" ]; then
+	export PATH="/usr/local/opt/postgresql@17/bin:${PATH}"
+elif [ -d "/opt/homebrew/opt/postgresql@17/bin/" ]; then
+    export PATH="/opt/homebrew/opt/postgresql@17/bin/:${PATH}"
+elif [ -d "/usr/local/opt/postgresql@16/bin" ]; then
 	export PATH="/usr/local/opt/postgresql@16/bin:${PATH}"
 elif [ -d "/opt/homebrew/opt/postgresql@16/bin/" ]; then
     export PATH="/opt/homebrew/opt/postgresql@16/bin/:${PATH}"
+elif [ -d "/usr/local/opt/postgresql@15/bin" ]; then
+	export PATH="/usr/local/opt/postgresql@15/bin:${PATH}"
+elif [ -d "/opt/homebrew/opt/postgresql@15/bin/" ]; then
+    export PATH="/opt/homebrew/opt/postgresql@15/bin/:${PATH}"
 fi
 
 # add visual studio code binaries to PATH
