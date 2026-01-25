@@ -55,7 +55,7 @@ export LSCOLORS=ExFxBxDxCxegedabagacad
 
 # customize jq command colors
 export JQ_COLORS="1;30:0;37:0;37:0;37:0;32:1;37:1;37"
-
+    
 # set up colors for man pages
 export LESS_TERMCAP_mb=$(printf '\e[01;31m') # enter blinking mode – red
 export LESS_TERMCAP_md=$(printf '\e[01;35m') # enter double-bright mode – bold, magenta

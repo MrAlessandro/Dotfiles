@@ -95,7 +95,7 @@ CURRENT_DIRECTORY="$(pwd)"
 # set Internal Field Separator
 IFS=": "
 # dotfiles
-DOTFILES="env"
+DOTFILES="shellenv"
 DOTFILES="aliases:${DOTFILES}"
 DOTFILES="profile:${DOTFILES}"
 DOTFILES="zprofile:${DOTFILES}"

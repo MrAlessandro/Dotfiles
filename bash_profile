@@ -1,8 +1,8 @@
 # ~/.bash_profile: executed by bash for login shells.
 
 # Load common environment setup
-if [ -f "${HOME}/.env" ]; then
-    . "${HOME}/.env"
+if [ -f "${HOME}/.shellenv" ]; then
+    . "${HOME}/.shellenv"
 fi
 
 # Set history file
