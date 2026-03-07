@@ -73,10 +73,6 @@ export VIRTUAL_ENV_DISABLE_PROMPT=yes
 if [ "${COLOR_PROMPT}" = "YES" ]; then
     # Check for active virtualenv
     function virtualenv_info {
-        if [[ "${TERM_PROGRAM}" == "vscode" ]]; then
-            echo " ";
-            return;
-        fi
         if [[ -n "${VIRTUAL_ENV}" ]]; then
             echo "%F{blue}($(basename ${VIRTUAL_ENV}))%f "
         fi
