@@ -65,10 +65,10 @@ export LESS_TERMCAP_so=$(printf '\e[01;33m') # enter standout mode – yellow
 export LESS_TERMCAP_ue=$(printf '\e[0m')     # leave underline mode
 export LESS_TERMCAP_us=$(printf '\e[04;36m') # enter underline mode – cyan
 
-# set default editor
-if command -v micro &>/dev/null; then
-    export EDITOR="micro"
-fi
+# # set default editor
+# if command -v micro &>/dev/null; then
+#     export EDITOR="micro"
+# fi
 
 # add python binaries to path
 if [ -d "${HOME}/Library/Python/3.7/bin" ]; then
@@ -183,6 +183,11 @@ fi
 
 if [ -d "$HOME/.pub-cache/bin" ]; then
     export PATH="$PATH":"$HOME/.pub-cache/bin"
+fi
+
+# add Docker binaries to PATH
+if [ -d "/Users/alessandro/.docker/bin" ]; then
+  export PATH="$PATH:/Users/alessandro/.docker/bin"
 fi
 
 export SENTRY_SKIP_DSYM_UPLOAD=false
